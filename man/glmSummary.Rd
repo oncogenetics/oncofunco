@@ -2,22 +2,28 @@
 % Please edit documentation in R/glmSummary.R
 \name{glmSummary}
 \alias{glmSummary}
-\title{A formatted dataframe output for glm() object.}
+\title{A formatted output for glm() object}
 \usage{
-glmSummary(model = NA, description = NA, summary = FALSE)
+glmSummary(Model = NA, Description = NA, Summary = FALSE)
 }
 \arguments{
-\item{model}{Output of glm() Defaults to NA.}
+\item{Model}{Output of \code{glm()}, defaults to \code{NA}.}
 
-\item{description}{Description column, string, Defaults to NA.}
+\item{Description}{Description column, string, defaults to \code{NA}.}
 
-\item{summary}{condensed summary Defaults to FALSE.}
+\item{summary}{condensed summary, defaults to \code{FALSE}.}
+}
+\value{
+a \code{data.frame} object
 }
 \description{
-This function allows you to get pretty GLM
+This function allows you to get pretty GLM summary table.
 }
 \examples{
-glmSummary()
+fit <- glm(mpg ~ cyl + wt, data = mtcars)
+glmSummary(Model = fit)
+glmSummary(Model = fit, Description = "testing")
+glmSummary(Model = fit, Description = "testing", Summary = TRUE)
 }
 \keyword{glm}
 \keyword{output}

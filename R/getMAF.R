@@ -10,7 +10,7 @@
 #' # dummy SNP data, 25 samples, 4 SNPs
 #' set.seed(123)
 #' geno <- matrix(sample(c(0, 1, 2), 100, replace = TRUE), ncol = 4)
-#' calculate MAF, returns 2 column matrix
+#' # calculate MAF, returns 2 column matrix
 #' getMAF(geno)
 
 

@@ -3,11 +3,12 @@ Title: Custom function for Oncogenetics team
 Version: 0.0.0.9000
 Authors@R: person("Tokhir", "Dadaev", email = "tokhir.dadaev@icr.ac.uk", role = c("aut", "cre"))
 Description: Collection of useful custom functions.
-Depends:
-    R (>= 3.2.4)
+Depends: R (>= 3.2.4)
 URL: http://github.com/oncogenetics/oncofunco
 BugReports: http://github.com/oncogenetics/oncofunco/issues
 License: MIT
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 5.0.1
+Imports: ggplot2, stringr
+

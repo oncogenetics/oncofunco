@@ -4,9 +4,16 @@
 \alias{cleanPackages}
 \title{Remove all non-default packages from session.}
 \usage{
-cleanPackages()
+cleanPackages(verbose = TRUE)
+}
+\arguments{
+\item{verbose}{print out summary, default is \code{TRUE}}
 }
 \description{
 Remove all non-default packages from session.
 }
+\keyword{clean}
+\keyword{detach}
+\keyword{package}
+\keyword{session}
 

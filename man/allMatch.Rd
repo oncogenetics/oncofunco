@@ -6,14 +6,24 @@
 \usage{
 allMatch(query, subject)
 }
+\arguments{
+\item{query}{a vector to look up in subject vector}
+
+\item{subject}{vector for indexing of matched query}
+}
+\value{
+list object
+}
 \description{
-Return all matching indexes in subject vector from query vector.
+Return all matching element indexes in subject vector from query vector.
 }
 \examples{
 # Input query and subject vecots
-match.list <- allMatch(query = c(1,2,3), subject = c(1,1,2,2,3,3,2))
+match.list <- allMatch(query = c(1, 2, 3), subject = c(1, 1, 2, 2, 3, 3, 2))
+
 # Output is query length list with subject indexes
 match.list
+
 # $`1`
 # [1] 1 2
 #

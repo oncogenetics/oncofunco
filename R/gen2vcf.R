@@ -4,7 +4,9 @@
 #' @param genFile input gen file
 #' @param chrName chromosome name \code{c(1:22,X,Y)}
 #' @param outVCFFile output file name for VCF
-#' @return none
+#' @param subsetSNPs index of SNPs to subset - rows
+#' @param subsetSamples index of Samples to subset - coloumns
+#' @return outputs VCF file, nothing returned in the workspace
 #' @keywords impute2 gen dose dosage convert vcf fastqtl
 #' @export
 

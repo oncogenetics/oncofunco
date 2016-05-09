@@ -4,7 +4,8 @@
 \alias{gen2vcf}
 \title{Convert IMPUTE2 gen to VCFv4.1 format, input for fastqtl}
 \usage{
-gen2vcf(genFile, chrName, outVCFFile)
+gen2vcf(genFile, chrName, outVCFFile, subsetSNPs = NULL,
+  subsetSamples = NULL)
 }
 \arguments{
 \item{genFile}{input gen file}
@@ -12,9 +13,13 @@ gen2vcf(genFile, chrName, outVCFFile)
 \item{chrName}{chromosome name \code{c(1:22,X,Y)}}
 
 \item{outVCFFile}{output file name for VCF}
+
+\item{subsetSNPs}{index of SNPs to subset - rows}
+
+\item{subsetSamples}{index of Samples to subset - coloumns}
 }
 \value{
-none
+outputs VCF file, nothing returned in the workspace
 }
 \description{
 This function converts IMPUTE2 gen file posterior probabilities to dosage, then outputs to VCF file.

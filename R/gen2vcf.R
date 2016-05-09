@@ -8,7 +8,7 @@
 #' @keywords impute2 gen dose dosage convert vcf fastqtl
 #' @export
 
-gen2vcf <- function(genFile, chrName, outVCFFile){
+gen2vcf <- function(genFile, chrName, outVCFFile, subsetSNPs = NULL, subsetSamples = NULL){
   # - convert to VCF format for http://fastqtl.sourceforge.net/
   
   # input: post probs file, output form IMPUTE2
@@ -29,7 +29,7 @@ gen2vcf <- function(genFile, chrName, outVCFFile){
   dose <- gen2dose(genFile = genFile, chrName = chrName)
   
   outVCF <- cbind(
-    #VCF 8 fixed, mandatory columns.
+    #VCF 9 fixed, mandatory columns.
     `#CHROM` = paste0("chr", dose$chrName),
     dose[, list(POS = V3,
                 ID = V2,
@@ -41,6 +41,16 @@ gen2vcf <- function(genFile, chrName, outVCFFile){
                 FORMAT = "DS") ],
     #VCF genotype as dosage
     dose[, 7:ncol(dose), with = FALSE])
+  
+  # Subset SNPs -------------------------------------------------------------
+  if(!is.null(subsetSNPs)) {
+    outVCF <- outVCF[ subsetSNPs, ]
+  }
+  
+  # Subset Samples ----------------------------------------------------------
+  if(!is.null(subsetSamples)) {
+    outVCF <- outVCF[, subsetSamples + 9, with = FALSE]
+  }
   
   #return
   write("##fileformat=VCFv4.1", outVCFFile)

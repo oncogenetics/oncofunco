@@ -2,15 +2,19 @@
 #'
 #' This function converts IMPUTE2 gen file posterior probabilities to dosage, then outputs to VCF file.
 #' @param genFile input gen file
+#' @param sampleFile if provided sampleID will be added as header, else X1..Xn as sampleID
 #' @param chrName chromosome name \code{c(1:22,X,Y)}
 #' @param outVCFFile output file name for VCF
+#' @param outVCFHeader output VCF header lines
 #' @param subsetSNPs index of SNPs to subset - rows
 #' @param subsetSamples index of Samples to subset - coloumns
 #' @return outputs VCF file, nothing returned in the workspace
 #' @keywords impute2 gen dose dosage convert vcf fastqtl
 #' @export
 
-gen2vcf <- function(genFile, chrName, outVCFFile, subsetSNPs = NULL, subsetSamples = NULL){
+gen2vcf <- function(genFile, sampleFile, chrName,
+                    outVCFFile, outVCFHeader,
+                    subsetSNPs = NULL, subsetSamples = NULL){
   # - convert to VCF format for http://fastqtl.sourceforge.net/
   
   # input: post probs file, output form IMPUTE2
@@ -28,11 +32,13 @@ gen2vcf <- function(genFile, chrName, outVCFFile, subsetSNPs = NULL, subsetSampl
   # chr7	789	SNP3	A	T	100	PASS	INFO	GT:DS	1/1:2.000	0/1:1.001	0/0:0.010	0/1:0.890
   
   
-  dose <- gen2dose(genFile = genFile, chrName = chrName)
+  dose <- gen2dose(genFile = genFile, sampleFile = sampleFile,
+                   chrName = chrName)
   
   outVCF <- cbind(
     #VCF 9 fixed, mandatory columns.
-    `#CHROM` = paste0("chr", dose$chrName),
+    #`#CHROM` = paste0("chr", dose$chrName),
+    `#CHROM` = chrName,
     dose[, list(POS = V3,
                 ID = V2,
                 REF = V4,
@@ -54,7 +60,9 @@ gen2vcf <- function(genFile, chrName, outVCFFile, subsetSNPs = NULL, subsetSampl
     outVCF <- outVCF[, subsetSamples + 9, with = FALSE]
   }
   
-  #return
-  write("##fileformat=VCFv4.1", outVCFFile)
-  write.table(outVCF, file = outVCFFile, append = TRUE, quote = FALSE, sep = "\t")
+  # header VCF 
+  write(outVCFHeader, file = outVCFFile)
+  # write genotype table, append to existing file with a VCF header
+  write.table(outVCF, file = outVCFFile,
+              append = TRUE, quote = FALSE, sep = "\t", row.names = FALSE)
 }

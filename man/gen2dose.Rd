@@ -4,10 +4,12 @@
 \alias{gen2dose}
 \title{Convert IMPUTE2 gen to dose}
 \usage{
-gen2dose(genFile, chrName)
+gen2dose(genFile, sampleFile, chrName)
 }
 \arguments{
 \item{genFile}{input gen file}
+
+\item{sampleFile}{if provided sampleID will be added as header, else X1..Xn as sampleID}
 
 \item{chrName}{chromosome name \code{c(1:22,X,Y)}}
 }

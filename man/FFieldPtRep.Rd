@@ -27,5 +27,7 @@ Force field simulation of interaction of set of points. Adapted form FField v0.1
 }
 \seealso{
 \url{http://cran.r-project.org/web/packages/FField}
+
+\url{http://cran.r-project.org/web/packages/ggrepel}
 }
 

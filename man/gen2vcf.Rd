@@ -4,15 +4,19 @@
 \alias{gen2vcf}
 \title{Convert IMPUTE2 gen to VCFv4.1 format, input for fastqtl}
 \usage{
-gen2vcf(genFile, chrName, outVCFFile, subsetSNPs = NULL,
-  subsetSamples = NULL)
+gen2vcf(genFile, sampleFile, chrName, outVCFFile, outVCFHeader,
+  subsetSNPs = NULL, subsetSamples = NULL)
 }
 \arguments{
 \item{genFile}{input gen file}
 
+\item{sampleFile}{if provided sampleID will be added as header, else X1..Xn as sampleID}
+
 \item{chrName}{chromosome name \code{c(1:22,X,Y)}}
 
 \item{outVCFFile}{output file name for VCF}
+
+\item{outVCFHeader}{output VCF header lines}
 
 \item{subsetSNPs}{index of SNPs to subset - rows}
 

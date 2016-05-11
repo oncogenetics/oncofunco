@@ -10,6 +10,7 @@
 #' @param iter.max the maximum number of iterations beyond which simulation will end and a warning will be reported.
 #' @export
 #' @seealso \url{http://cran.r-project.org/web/packages/FField}
+#' @seealso \url{http://cran.r-project.org/web/packages/ggrepel}
 
 FFieldPtRep <- function(coords, rep.fact = 20, rep.dist.lmt = 10, attr.fact = 0.2,
                          adj.max = 0.1, adj.lmt = 0.5, iter.max = 10000)

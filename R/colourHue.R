@@ -1,7 +1,11 @@
 #' ggplot2 colours
 #'
 #' Generate colours matching ggplot
+#' @param n number of colours to output
+#' @return n number of colour names
 #' @export colourHue
+#' @author Tokhir Dadaev
+#' @seealso \url{http://stackoverflow.com/questions/8197559}
 
 colourHue <- function(n){
   # adapted from http://stackoverflow.com/questions/8197559

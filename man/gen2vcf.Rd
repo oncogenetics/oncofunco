@@ -28,6 +28,9 @@ outputs VCF file, nothing returned in the workspace
 \description{
 This function converts IMPUTE2 gen file posterior probabilities to dosage, then outputs to VCF file.
 }
+\author{
+Tokhir Dadaev
+}
 \keyword{convert}
 \keyword{dosage}
 \keyword{dose}

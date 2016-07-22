@@ -33,4 +33,7 @@ match.list
 # $`3`
 # [1] 5 6
 }
+\author{
+Daniel Leongamornlert
+}
 

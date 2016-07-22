@@ -12,6 +12,9 @@ cleanPackages(verbose = TRUE)
 \description{
 Remove all non-default packages from session.
 }
+\author{
+Daniel Leongamornlert
+}
 \keyword{clean}
 \keyword{detach}
 \keyword{package}

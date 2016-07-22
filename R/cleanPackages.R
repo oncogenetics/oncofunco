@@ -3,6 +3,7 @@
 #' Remove all non-default packages from session.
 #' @param verbose print out summary, default is \code{TRUE}
 #' @export cleanPackages
+#' @author Daniel Leongamornlert
 #' @keywords clean session package detach
 
 

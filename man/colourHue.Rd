@@ -6,7 +6,19 @@
 \usage{
 colourHue(n)
 }
+\arguments{
+\item{n}{number of colours to output}
+}
+\value{
+n number of colour names
+}
 \description{
 Generate colours matching ggplot
+}
+\author{
+Tokhir Dadaev
+}
+\seealso{
+\url{http://stackoverflow.com/questions/8197559}
 }
 

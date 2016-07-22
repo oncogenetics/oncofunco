@@ -2,6 +2,7 @@
 #'
 #' Left pad strings.
 #' @export strPadLeft
+#' @author Tokhir Dadaev
 
 
 strPadLeft <- function(labels, width = 15, pad = " "){

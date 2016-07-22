@@ -9,4 +9,7 @@ strPadLeft(labels, width = 15, pad = " ")
 \description{
 Left pad strings.
 }
+\author{
+Tokhir Dadaev
+}
 

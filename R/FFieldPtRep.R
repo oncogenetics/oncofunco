@@ -9,6 +9,7 @@
 #' @param adj.lmt position adjustment limit at which the simulation stops.
 #' @param iter.max the maximum number of iterations beyond which simulation will end and a warning will be reported.
 #' @export
+#' @author Tokhir Dadaev
 #' @seealso \url{http://cran.r-project.org/web/packages/FField}
 #' @seealso \url{http://cran.r-project.org/web/packages/ggrepel}
 

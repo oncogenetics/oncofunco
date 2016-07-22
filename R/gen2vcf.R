@@ -10,6 +10,7 @@
 #' @param subsetSamples index of Samples to subset - coloumns
 #' @return outputs VCF file, nothing returned in the workspace
 #' @keywords impute2 gen dose dosage convert vcf fastqtl
+#' @author Tokhir Dadaev
 #' @export
 
 gen2vcf <- function(genFile, sampleFile, chrName,

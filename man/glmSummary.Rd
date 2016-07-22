@@ -25,6 +25,9 @@ glmSummary(Model = fit)
 glmSummary(Model = fit, Description = "testing")
 glmSummary(Model = fit, Description = "testing", Summary = TRUE)
 }
+\author{
+Tokhir Dadaev
+}
 \keyword{glm}
 \keyword{output}
 \keyword{summary}

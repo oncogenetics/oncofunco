@@ -7,6 +7,7 @@
 #' @return a \code{data.frame} object
 #' @keywords glm summary output
 #' @export
+#' @author Tokhir Dadaev
 #' @examples
 #' fit <- glm(mpg ~ cyl + wt, data = mtcars)
 #' glmSummary(Model = fit)

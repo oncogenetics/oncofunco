@@ -25,6 +25,9 @@ FFieldPtRep(coords, rep.fact = 20, rep.dist.lmt = 10, attr.fact = 0.2,
 \description{
 Force field simulation of interaction of set of points. Adapted form FField v0.1.0 package by Grigori Kapoustin on 27/04/2006
 }
+\author{
+Tokhir Dadaev
+}
 \seealso{
 \url{http://cran.r-project.org/web/packages/FField}
 

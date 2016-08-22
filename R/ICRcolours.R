@@ -5,6 +5,7 @@
 #' @param plot logical, defaults to FALSE
 #' @return a \code{character vector} object with hex values
 #' @keywords icr colour hex
+#' @author Tokhir Dadaev
 #' @export
 
 ICRcolours <- function(col = "Primary", plot = FALSE){

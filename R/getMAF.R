@@ -5,7 +5,7 @@
 #' @param NoCall missing value for genotype, defaults to 9.
 #' @return a \code{matrix} object. First column is MAF (range 0-0.5), second column is 1 if the MAF is flipped, else 0.
 #' @keywords maf dosage snp
-#' @export
+#' @export getMAF
 #' @examples
 #' # dummy SNP data, 25 samples, 4 SNPs
 #' set.seed(123)

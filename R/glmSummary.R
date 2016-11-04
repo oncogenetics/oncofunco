@@ -6,7 +6,7 @@
 #' @param summary condensed summary, defaults to \code{FALSE}.
 #' @return a \code{data.frame} object
 #' @keywords glm summary output
-#' @export
+#' @export glmSummary
 #' @author Tokhir Dadaev
 #' @examples
 #' fit <- glm(mpg ~ cyl + wt, data = mtcars)

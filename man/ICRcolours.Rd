@@ -17,6 +17,9 @@ a \code{character vector} object with hex values
 \description{
 Returns ICR brand colour Hex values
 }
+\author{
+Tokhir Dadaev
+}
 \keyword{colour}
 \keyword{hex}
 \keyword{icr}

@@ -6,7 +6,7 @@
 #' @param chrName chromosome name \code{c(1:22,X,Y)}
 #' @return a \code{data.frame} object
 #' @keywords impute2 gen dose dosage convert
-#' @export
+#' @export gen2dose
 
 gen2dose <- function(genFile, sampleFile, chrName){
   # input: post probs file, output form IMPUTE2

@@ -6,7 +6,7 @@
 #' @return a \code{character vector} object with hex values
 #' @keywords icr colour hex
 #' @author Tokhir Dadaev
-#' @export
+#' @export ICRcolours
 
 ICRcolours <- function(col = "Primary", plot = FALSE){
   #ICR colours

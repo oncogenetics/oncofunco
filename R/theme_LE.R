@@ -4,7 +4,7 @@
 #' @keywords ggplot theme locusexplorer
 #' @import ggplot2
 #' @author Tokhir Dadaev
-#' @export
+#' @export theme_LE
 
 theme_LE <- function(){
   # LocusExplorer ggplot custom theme

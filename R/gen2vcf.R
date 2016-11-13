@@ -11,7 +11,7 @@
 #' @return outputs VCF file, nothing returned in the workspace
 #' @keywords impute2 gen dose dosage convert vcf fastqtl
 #' @author Tokhir Dadaev
-#' @export
+#' @export gen2vcf
 
 gen2vcf <- function(genFile, sampleFile, chrName,
                     outVCFFile, outVCFHeader,

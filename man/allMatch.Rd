@@ -34,6 +34,6 @@ match.list
 # [1] 5 6
 }
 \author{
-Daniel Leongamornlert, Tokhir Dadaev
+Daniel Leongamornlert
 }
 

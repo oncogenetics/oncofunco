@@ -1,4 +1,4 @@
-#' Manhattan plot.
+#' LocusExplorer - Manhattan plot
 #'
 #' Manhattan plot for LocusExplorer.
 #' @param assoc SNP association results, data.frame object with c("SNP","BP","P") columns. Required.
@@ -6,15 +6,16 @@
 #' @param geneticMap Recombination map, data.frame object with c("BP", "RECOMB") columns. Subset of one of genetic_map_*_combined_b37.txt, at http://mathgen.stats.ox.ac.uk/impute/1000GP_Phase3/ . Optional.
 #' @param suggestiveLine Suggestive line, default is 5.
 #' @param genomewideLine Genomewide link, dafault is 8.
-#' @param zoomStart,zoomEnd Region range, zoom, minimum BP and maximum BP, advised to keep this less than 5Mb.
+#' @param xStart,xEnd Region range, zoom, minimum BP and maximum BP, advised to keep this less than 5Mb.
 #' @param hits SNP names to label in the plot. Must be present in assoc data.frame.
 #' @param hitsLabel Default is TRUE, set to FALSE not to show SNP names on the plot.
+#' @param pad Default is TRUE, to align plots pad strings with spaces, using oncofunco::strPadLeft().
+#' @param title character string for plot title. Default is NULL, i.e.: no plot title. 
 #' @param opts Default is c("Recombination","LD","LDSmooth","SuggestiveLine","GenomewideLine","Hits"), parts of plot to display.
 #' @export plotManhattan
 #' @author Tokhir Dadaev
 #' @return a \code{ggplot} object
 #' @keywords manhattan plot SNP genetics
-#' 
 
 
 plotManhattan <- function(
@@ -23,10 +24,12 @@ plotManhattan <- function(
   geneticMap = NULL,
   suggestiveLine = 5,
   genomewideLine = 8,
-  zoomStart = NULL,
-  zoomEnd = NULL,
+  xStart = NULL,
+  xEnd = NULL,
   hits = NULL,
   hitsLabel = TRUE,
+  pad = TRUE,
+  title = NULL,
   opts = c("Recombination","LD","LDSmooth","SuggestiveLine",
            "GenomewideLine","Hits")){
   
@@ -41,11 +44,11 @@ plotManhattan <- function(
   assoc$PLog <- -log10(assoc$P)
   
   # XY range ------------------------------------------------------------------
-  if(is.null(zoomStart))zoomStart <- min(assoc$BP, na.rm = TRUE)
-  if(is.null(zoomEnd))zoomEnd <- max(assoc$BP, na.rm = TRUE)
-  Ymax <- ceiling(max(c(10, assoc$PLog)))
-  Yrange <- c(0, max(c(10, ceiling((Ymax + 1)/5) * 5)))
-  Xrange <- c(zoomStart, zoomEnd)
+  if(is.null(xStart))xStart <- min(assoc$BP, na.rm = TRUE)
+  if(is.null(xEnd))xEnd <- max(assoc$BP, na.rm = TRUE)
+  yMax <- ceiling(max(c(10, assoc$PLog)))
+  yRange <- c(0, max(c(10, ceiling((yMax + 1)/5) * 5)))
+  xRange <- c(xStart, xEnd)
   
   #Check input - recomb -------------------------------------------------------
   if("Recombination" %in% opts){
@@ -54,14 +57,14 @@ plotManhattan <- function(
     geneticMap <- data.frame(
       BP = geneticMap$BP,
       #adjust recomb value to pvalue
-      RECOMB_ADJ = geneticMap$RECOMB * Ymax / 100)}
+      RECOMB_ADJ = geneticMap$RECOMB * yMax / 100)}
   
   # Plot all SNPs - background ------------------------------------------------
   gg_out <-
     ggplot(assoc, aes(x = BP, y = PLog)) +
     # all snps grey hollow shapes
     geom_point(size = 4, colour = "#B8B8B8", shape = assoc$TYPED) +
-    geom_hline(yintercept = seq(0, Ymax, 5),
+    geom_hline(yintercept = seq(0, yMax, 5),
                linetype = "dotted", col = "grey60")
   
   # Plot - Recombination ------------------------------------------------------
@@ -75,13 +78,20 @@ plotManhattan <- function(
   # Check input - LD ----------------------------------------------------------
   if("LD" %in% opts | "LDSmooth" %in% opts){
     if(is.null(LD)) stop("LD is missing, must have columns: c('BP_A','SNP_A','BP_B','SNP_B','R2')")
-    if(!all(c("BP_A","SNP_A","BP_B","SNP_B","R2") %in% colnames(LD))){
-      stop("LD must have columns: c('BP_A','SNP_A','BP_B','SNP_B','R2')") } else {
-        #if input is data.table, then convert to data.frame
-        LD <- as.data.frame(LD)}
-    if(is.null(hits)){warning("All SNPs in LD$SNP_A selected as hits")
-      hits <- LD$SNP_A
+    if(!all(c("BP_A","SNP_A","BP_B","SNP_B","R2") %in% colnames(LD)))
+      stop("LD must have columns: c('BP_A','SNP_A','BP_B','SNP_B','R2')")
+    
+    LD <- as.data.frame(LD)
+    
+    if(is.null(hits)){
+      hits <- unique(LD$SNP_A)
+      hits <- hits[1:min(5, length(hits))]
+      warning(
+        paste("hits missing, selected first <5 SNPs as hits from LD$SNP_A, n = :",
+              length(unique(LD$SNP_A))))
     } else {
+      hits <- sort(intersect(hits, LD$SNP_A))
+      
       colourLD <- oncofunco::colourHue(length(hits))
       colourLDPalette <- unlist(lapply(colourLD, function(i){
         colorRampPalette(c("grey95", i))(100)}))
@@ -91,13 +101,12 @@ plotManhattan <- function(
         LD[ LD$SNP_A %in% hits, c("BP_A","SNP_A","BP_B","SNP_B","R2")],
         assoc[, c("BP", "TYPED", "PLog")],
         by.x = "BP_B", by.y = "BP") %>% 
-        #tbl_df %>%
         mutate(
           LDColIndex = ifelse(round(R2,2) == 0, 1, round(R2, 2) * 100),
           hitColIndex = as.numeric(factor(SNP_A, levels = hits)),
           hitCol = colourLD[hitColIndex],
           LDCol = colourLDPalette[(hitColIndex - 1) * 100 + LDColIndex],
-          R2Adj = Ymax * R2 * 0.8)
+          R2Adj = yMax * R2 * 0.8)
       # Plot - LD Fill & LD Smooth --------------------------------------------
       #LD fill
       if("LD" %in% opts){
@@ -135,18 +144,14 @@ plotManhattan <- function(
                  size = 0.5,
                  colour = "#ca0020")}
   
-  
-  #if("Hits" %in% opts & is.null(hits)) stop("Hit SNPs must be provided, and must be present in assoc$SNP")   
-  
   # Mark Hits: shape and vline ----------------------------------------------
-  if("Hits" %in% opts & !is.null(hits)){
+  if("Hits" %in% opts & !is.null(hits) & any(hits %in% assoc$SNP)){
     gg_out <- gg_out +
       #mark hit SNPs - outline shapes
       geom_point(data = assoc[ assoc$SNP %in% hits, ],
                  aes(x = BP, y = PLog, shape = TYPED),
-                 size = 4, colour = "black",
-                 #shape = assoc[ SNP %in% hits, TYPED]) +
-      ) + scale_shape_identity() +
+                 size = 4, colour = "black") +
+      scale_shape_identity() +
       #mark hit SNPs - vertical lines
       geom_segment(data = assoc[ assoc$SNP %in% hits, ],
                    aes(x = BP, y = 0, xend = BP, yend = PLog),
@@ -163,22 +168,27 @@ plotManhattan <- function(
           gg_out +
           geom_text_repel(
             aes(BP, PLog, label = SNP),
-            data = assoc[ assoc$SNP %in% hits, ])
-      }
+            data = assoc[ assoc$SNP %in% hits, ])}
   
+  # Add title ---------------------------------------------------------------
+  if(!is.null(title)) gg_out <- gg_out + ggtitle(title)
   
   # General options ---------------------------------------------------------
   gg_out <- gg_out +
     coord_cartesian(
-      xlim = Xrange,
-      ylim = Yrange) +
+      xlim = xRange,
+      ylim = yRange) +
     scale_y_continuous(
-      breaks = seq(0, Ymax, 5),
+      breaks = seq(0, yMax, 5),
       #labels = oncofunco::strPadLeft(seq(0, ROIPLogMax, 5)),
-      labels = seq(0, Ymax, 5),
+      labels = if(pad){strPadLeft(seq(0, yMax, 5))} else {
+        seq(0, yMax, 5)},
       name = expression(-log[10](italic(p)))) +
     scale_colour_identity()
   
   # Output ------------------------------------------------------------------
   gg_out
 } #END plotManhattan
+
+
+

@@ -5,7 +5,7 @@
 #' @param subject vector for indexing of matched query
 #' @return list object
 #' @export allMatch
-#' @author Daniel Leongamornlert, Tokhir Dadaev
+#' @author Daniel Leongamornlert
 #' @examples
 #' # Input query and subject vecots
 #' match.list <- allMatch(query = c(1, 2, 3), subject = c(1, 1, 2, 2, 3, 3, 2))

@@ -1,8 +1,10 @@
 #' Calculate MAF
 #'
 #' This function calculates MAF for imputed SNP data in dosage format.
-#' @param Z matrix object, rows are samples, columns are SNPs, values range 0-2.
-#' @param NoCall missing value for genotype, defaults to 9.
+#' @param z matrix object, rows are samples, columns are SNPs, values range 0-2.
+#' @param noCall missing value for genotype, defaults to 9.
+#' @param flip default TRUE. If maf is more than 0.5, then flip 1-maf.
+#' @param dosageMax default is 2 , for chr23 use 1.
 #' @return a \code{matrix} object. First column is MAF (range 0-0.5), second column is 1 if the MAF is flipped, else 0.
 #' @keywords maf dosage snp
 #' @export getMAF
@@ -14,29 +16,34 @@
 #' getMAF(geno)
 
 
-getMAF <- function(Z = NULL, NoCall = 9){
+getMAF <- function(z = NULL, NoCall = 9, flip = TRUE, dosageMax = 2){
 
-  if(!is.matrix(Z)){
-    stop('class(Z) must be "matrix", rows are samples, columns are SNPs, range 0-2.')
+  if(!is.matrix(z)){
+    stop('class(z) must be "matrix", rows are samples, columns are SNPs, range 0-2.')
   }
 
   # convert missing genotype to NA
-  is.NoCall <- which(Z == NoCall)
-  Z[is.NoCall] <- NA
+  is.NoCall <- which(z == NoCall)
+  z[is.NoCall] <- NA
 
-  # check if dosage range is 0-2
-  if(min(Z, na.rm = TRUE) < 0 |
-     max(Z, na.rm = TRUE) > 2){
-    stop('Z matrix values range must be 0-2')
+  # check if dosage range is 0 and dosageMax
+  if(min(z, na.rm = TRUE) < 0 |
+     max(z, na.rm = TRUE) > dosageMax){
+    stop(paste0("z matrix values range must be 0-", dosageMax))
   }
 
-  # MAF = mean divided by 2, ecluding no-calls (NAs)
-  maf <- colMeans(Z, na.rm = TRUE) / 2
+  # MAF = mean divided by dosageMax, excluding no-calls (NAs)
+  maf <- colMeans(z, na.rm = TRUE) / dosageMax
 
-  # if flipped mark it, MAF range can be between 0-0.5
-  maf <- cbind(ifelse(maf > 0.5, 1 - maf, maf),
-               ifelse(maf > 0.5, 1, 0))
-
+  #if flipped mark it
+  if(flip){
+    maf <- cbind(maf = ifelse(maf > 0.5, 1 - maf, maf),
+                 flipped = ifelse(maf > 0.5, 1, 0))
+  } else {
+    maf <- cbind(maf = maf,
+                 flipped = 0)
+  }
+  
   #return MAF matrix
   return(maf)
 }

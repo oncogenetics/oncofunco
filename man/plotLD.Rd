@@ -4,11 +4,11 @@
 \alias{plotLD}
 \title{LocusExplorer - LD plot}
 \usage{
-plotLD(LD = NULL, xStart = NULL, xEnd = NULL, hits = NULL,
+plotLD(data = NULL, xStart = NULL, xEnd = NULL, hits = NULL,
   hitsLabel = TRUE, pad = TRUE, title = NULL)
 }
 \arguments{
-\item{LD}{plink LD output format, data.frame object with c("BP_A","SNP_A","BP_B","SNP_B","R2") columns. Optional/recommended.}
+\item{data}{plink LD output format, data.frame object with c("BP_A","SNP_A","BP_B","SNP_B","R2") columns. Optional/recommended.}
 
 \item{xStart, xEnd}{Region range, zoom, minimum BP and maximum BP, advised to keep this less than 5Mb.}
 
@@ -33,4 +33,3 @@ Tokhir Dadaev
 \keyword{SNP}
 \keyword{genetics}
 \keyword{plot}
-

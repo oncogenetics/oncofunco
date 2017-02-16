@@ -25,4 +25,3 @@ Blank plot for LocusExplorer, if data is missing blank output ggplot with text a
 \author{
 Tokhir Dadaev
 }
-

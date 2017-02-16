@@ -15,4 +15,3 @@ Tokhir Dadaev
 \keyword{ggplot}
 \keyword{locusexplorer}
 \keyword{theme}
-

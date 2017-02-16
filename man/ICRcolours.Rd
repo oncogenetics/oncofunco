@@ -23,4 +23,3 @@ Tokhir Dadaev
 \keyword{colour}
 \keyword{hex}
 \keyword{icr}
-

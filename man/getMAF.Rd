@@ -27,4 +27,3 @@ getMAF(geno)
 \keyword{dosage}
 \keyword{maf}
 \keyword{snp}
-

@@ -31,4 +31,3 @@ Tokhir Dadaev
 \keyword{glm}
 \keyword{output}
 \keyword{summary}
-

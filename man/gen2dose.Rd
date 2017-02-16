@@ -24,4 +24,3 @@ This function converts IMPUTE2 gen file posterior probabilities to dosage: colla
 \keyword{dose}
 \keyword{gen}
 \keyword{impute2}
-

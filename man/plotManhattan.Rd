@@ -46,4 +46,3 @@ Tokhir Dadaev
 \keyword{genetics}
 \keyword{manhattan}
 \keyword{plot}
-

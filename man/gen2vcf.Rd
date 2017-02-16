@@ -38,4 +38,3 @@ Tokhir Dadaev
 \keyword{gen}
 \keyword{impute2}
 \keyword{vcf}
-

@@ -17,10 +17,9 @@ character vector of colour names.
 \description{
 Shade and tints for input colour
 }
-\author{
-Tokhir Dadaev
-}
 \seealso{
 \url{http://colorbrewer2.org/}
 }
-
+\author{
+Tokhir Dadaev
+}

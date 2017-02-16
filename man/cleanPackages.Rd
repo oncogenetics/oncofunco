@@ -19,4 +19,3 @@ Daniel Leongamornlert
 \keyword{detach}
 \keyword{package}
 \keyword{session}
-

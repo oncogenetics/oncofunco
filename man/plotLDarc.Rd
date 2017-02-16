@@ -36,4 +36,3 @@ Tokhir Dadaev
 \keyword{SNP}
 \keyword{genetics}
 \keyword{plot}
-

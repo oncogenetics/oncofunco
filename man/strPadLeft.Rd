@@ -12,4 +12,3 @@ Left pad strings.
 \author{
 Tokhir Dadaev
 }
-

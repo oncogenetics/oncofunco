@@ -36,4 +36,3 @@ match.list
 \author{
 Daniel Leongamornlert
 }
-

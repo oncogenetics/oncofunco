@@ -38,7 +38,7 @@ plotLD <- function(
     warning(
       paste("hits missing, selected first <5 SNPs as hits from data$SNP_A, n = :",
             length(unique(data$SNP_A))))
-  } else hits <- sort(intersect(hits, data$SNP_A))
+  } else hits <- intersect(hits, data$SNP_A)
   
   if(length(hits) > 0){
     if(!all(hits %in% unique(data$SNP_A))){ 

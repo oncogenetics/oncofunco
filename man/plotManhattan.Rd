@@ -6,9 +6,9 @@
 \usage{
 plotManhattan(assoc = NULL, LD = NULL, geneticMap = NULL,
   suggestiveLine = 5, genomewideLine = 8, xStart = NULL, xEnd = NULL,
-  hits = NULL, hitsLabel = TRUE, pad = TRUE, title = NULL,
-  opts = c("Recombination", "LD", "LDSmooth", "SuggestiveLine",
-  "GenomewideLine", "Hits"))
+  hits = NULL, hitsName = hits, hitsLabel = TRUE, pad = TRUE,
+  title = NULL, opts = c("Recombination", "LD", "LDSmooth",
+  "SuggestiveLine", "GenomewideLine", "Hits"))
 }
 \arguments{
 \item{assoc}{SNP association results, data.frame object with c("SNP","BP","P") columns. Required.}
@@ -24,6 +24,8 @@ plotManhattan(assoc = NULL, LD = NULL, geneticMap = NULL,
 \item{xStart, xEnd}{Region range, zoom, minimum BP and maximum BP, advised to keep this less than 5Mb.}
 
 \item{hits}{SNP names to label in the plot. Must be present in assoc data.frame.}
+
+\item{hitsName}{alternative SNP names to label in the plot. Default same as `hits`}
 
 \item{hitsLabel}{Default is TRUE, set to FALSE not to show SNP names on the plot.}
 

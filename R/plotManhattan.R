@@ -8,6 +8,7 @@
 #' @param genomewideLine Genomewide link, dafault is 8.
 #' @param xStart,xEnd Region range, zoom, minimum BP and maximum BP, advised to keep this less than 5Mb.
 #' @param hits SNP names to label in the plot. Must be present in assoc data.frame.
+#' @param hitsName alternative SNP names to label in the plot. Default same as `hits`
 #' @param hitsLabel Default is TRUE, set to FALSE not to show SNP names on the plot.
 #' @param pad Default is TRUE, to align plots pad strings with spaces, using oncofunco::strPadLeft().
 #' @param title character string for plot title. Default is NULL, i.e.: no plot title. 
@@ -24,9 +25,10 @@ plotManhattan <- function(
   geneticMap = NULL,
   suggestiveLine = 5,
   genomewideLine = 8,
-  xStart = NULL,
-  xEnd = NULL,
+  xStart = NULL, #xStart=regionStartZoom; 
+  xEnd = NULL, #xEnd = regionEndZoom
   hits = NULL,
+  hitsName = hits,
   hitsLabel = TRUE,
   pad = TRUE,
   title = NULL,
@@ -49,6 +51,9 @@ plotManhattan <- function(
   yMax <- ceiling(max(c(10, assoc$PLog)))
   yRange <- c(0, max(c(10, ceiling((yMax + 1)/5) * 5)))
   xRange <- c(xStart, xEnd)
+  
+  #yRangePLog <- c(0, round(max(-log10(assoc$P)) + 5, -1))
+  #yRangePostProb <- c(0, 1)
   
   #Check input - recomb -------------------------------------------------------
   if("Recombination" %in% opts){
@@ -90,7 +95,8 @@ plotManhattan <- function(
         paste("hits missing, selected first <5 SNPs as hits from LD$SNP_A, n = :",
               length(unique(LD$SNP_A))))
     } else {
-      hits <- sort(intersect(hits, LD$SNP_A))
+      #hits <- sort(intersect(hits, LD$SNP_A))
+      #hits <- intersect(hits, LD$SNP_A)
       
       colourLD <- oncofunco::colourHue(length(hits))
       colourLDPalette <- unlist(lapply(colourLD, function(i){
@@ -160,15 +166,33 @@ plotManhattan <- function(
   
   
   # Mark Hits: Labels -------------------------------------------------------
-  # SNP names on the plot for hits
+  # SNP names on the plot for hits,
+  # if alternative names given then use those, hitsName
   if("Hits" %in% opts & length(hits) > 0)
     if(!is.null(hitsLabel))
       if(hitsLabel){
+        plotDat <- assoc[ assoc$SNP %in% hits, ]
+        
+        if(all(hits == hitsName)) {
+          plotDat$label <- plotDat$SNP
+        } else {
+          
+          x <- data.frame(SNP = hits, label = hitsName, stringsAsFactors = FALSE)
+          plotDat <- merge(plotDat, x, by = "SNP")
+          
+          #plotDat$label <- hitsName[match(plotDat$SNP, hits)]
+        }
+        
+        plotDat$label <- as.character(plotDat$label)
+        
         gg_out <- 
           gg_out +
           geom_text_repel(
-            aes(BP, PLog, label = SNP),
-            data = assoc[ assoc$SNP %in% hits, ])}
+            aes(BP, PLog, label = label),
+            data = plotDat)
+        
+        
+      }
   
   # Add title ---------------------------------------------------------------
   if(!is.null(title)) gg_out <- gg_out + ggtitle(title)
@@ -179,16 +203,13 @@ plotManhattan <- function(
       xlim = xRange,
       ylim = yRange) +
     scale_y_continuous(
-      breaks = seq(0, yMax, 5),
+      breaks = seq(0, yRange[2], 5),
       #labels = oncofunco::strPadLeft(seq(0, ROIPLogMax, 5)),
-      labels = if(pad){strPadLeft(seq(0, yMax, 5))} else {
-        seq(0, yMax, 5)},
+      labels = if(pad){strPadLeft(seq(0, yRange[2], 5))} else {
+        seq(0, yRange[2], 5)},
       name = expression(-log[10](italic(p)))) +
     scale_colour_identity()
   
   # Output ------------------------------------------------------------------
   gg_out
 } #END plotManhattan
-
-
-

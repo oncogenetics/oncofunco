@@ -25,6 +25,19 @@ frr <- function(data, FamilialRisk = 2){
     snp)
 }
 
+# dummy data
+# df1 <- read.table(text = "snp	maf	est
+# snp1	0.7535	0.03
+# snp2	0.5353	0
+# snp3	0.1615	NA
+# snp4	0.01 0.5
+# snp5	NA	0.07
+# snp6	0.707	0.01
+# snp7	NA	NA
+# snp8	0.1365	-0.03
+# snp9	0.1988	-0.07", header = TRUE)
+#
+# testing
 # frr()
 # frr(x)
 # frr(data.frame(x = "a", "1", "3"))
@@ -32,13 +45,3 @@ frr <- function(data, FamilialRisk = 2){
 #     
 # frr(df1)
 
-df1 <- read.table(text = "snp	maf	est
-snp1	0.7535	0.03
-snp2	0.5353	0
-snp3	0.1615	NA
-snp4	0.01 0.5
-snp5	NA	0.07
-snp6	0.707	0.01
-snp7	NA	NA
-snp8	0.1365	-0.03
-snp9	0.1988	-0.07", header = TRUE)

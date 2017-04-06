@@ -1,9 +1,9 @@
 #' Calculate Familial Relative Risk (FRR)
 #'
-#' This function calculates FRR.
+#' This function calculates FRR and Contribution of FRR percentage.
 #' @param data is data.frame object with 3 columns, `c("snp", "maf", "est")`.
 #' @param FamilialRisk Familial risk to first-degree relatives of cancer cases. Default is 2.
-#' @return a named \code{numeric} object.
+#' @return data.frame with FRR and ContributionFRR columns.
 #' @keywords risk snp familial frr
 #' @export frr
 
@@ -19,11 +19,14 @@ frr <- function(data, FamilialRisk = 2){
   maf <- data[[2]]
   est <- data[[3]]
   
-  setNames(
-    (maf * exp(est)^2 + (1 - maf)) /
-    (maf * exp(est)   + (1 - maf))^2,
-    snp)
-}
+  FRR <- (maf * exp(est)^2 + (1 - maf)) /
+         (maf * exp(est)   + (1 - maf))^2
+  ContributionFRR <- log(FRR)/(log(FamilialRisk)/100)
+  
+  data.frame(FRR, ContributionFRR)
+  }
+
+
 
 # dummy data
 # df1 <- read.table(text = "snp	maf	est
@@ -36,12 +39,12 @@ frr <- function(data, FamilialRisk = 2){
 # snp7	NA	NA
 # snp8	0.1365	-0.03
 # snp9	0.1988	-0.07", header = TRUE)
-#
+# 
 # testing
 # frr()
 # frr(x)
 # frr(data.frame(x = "a", "1", "3"))
 # frr(df1[1:3,])
-#     
+# 
 # frr(df1)
-
+# 

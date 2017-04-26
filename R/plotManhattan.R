@@ -106,7 +106,7 @@ plotManhattan <- function(
       plotDat <- merge(
         LD[ LD$SNP_A %in% hits, c("BP_A","SNP_A","BP_B","SNP_B","R2")],
         assoc[, c("BP", "TYPED", "PLog")],
-        by.x = "BP_B", by.y = "BP") %>% 
+        by.x = "BP_B", by.y = "BP", all = TRUE) %>% 
         mutate(
           LDColIndex = ifelse(round(R2,2) == 0, 1, round(R2, 2) * 100),
           hitColIndex = as.numeric(factor(SNP_A, levels = hits)),

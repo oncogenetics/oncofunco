@@ -10,6 +10,7 @@
 #' @param colour colour for bigWig files, defaults to encode colours: c("#FF1F1F","#FFB41F","#2ADFAF","#1FB4FF","#1F1FFF","#B41FFF","#FF1FB4")
 #' @param alpha transparency for overlayed tracks, default 0.7.
 #' @param chr,xStart,xEnd subset bigWig, chromosome number, postion start and end.
+#' @param pad Default is TRUE, to align plots pad strings with spaces, using oncofunco::strPadLeft().
 #' @param title character string for plot title. Default is NULL, i.e.: no plot title. 
 #' @export plotHistone
 #' @author Tokhir Dadaev
@@ -31,6 +32,7 @@ plotHistone <- function(
   chr = NULL,
   xStart = NULL,
   xEnd = NULL,
+  pad = TRUE,
   title = NULL){
   # Check input data --------------------------------------------------------
   if(is.null(folder)) stop("Folder to bigWig files missing.")
@@ -56,7 +58,7 @@ plotHistone <- function(
           x <- as.data.frame(import(files[i], which = gr))
           x <- x[ x$score > 5, c("start", "end", "score")]
           x$score <- round(ifelse(x$score >= 100, 100, x$score),0)
-          x$name <- name[i]
+          if(nrow(x) == 0) {NULL} else {x$name <- name[i]}
           #return
           x
         }))
@@ -71,7 +73,11 @@ plotHistone <- function(
                           ymin = 0, ymax = score,
                           fill = name)) +
       geom_rect(alpha = alpha) +
-      scale_fill_manual(values = colour)
+      scale_fill_manual(values = colour) +
+      scale_y_continuous(breaks = 50,
+                         labels = if(pad) strPadLeft("Histone") else "Histone",
+                         limits = c(0, 100),
+                         name = "") 
   }
   
   # Add title ---------------------------------------------------------------

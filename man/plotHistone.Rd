@@ -14,7 +14,8 @@ plotHistone(folder = NULL,
   "wgEncodeBroadHistoneNhlfH3k27acStdSig.bigWig"), name = c("GM12878",
   "H1-hESC", "HSMM", "HUVEC", "K562", "NHEK", "NHLF"), colour = c("#FF1F1F",
   "#FFB41F", "#2ADFAF", "#1FB4FF", "#1F1FFF", "#B41FFF", "#FF1FB4"),
-  alpha = 0.7, chr = NULL, xStart = NULL, xEnd = NULL, title = NULL)
+  alpha = 0.7, chr = NULL, xStart = NULL, xEnd = NULL, pad = TRUE,
+  title = NULL)
 }
 \arguments{
 \item{folder}{folder path for bigWig files}
@@ -28,6 +29,8 @@ plotHistone(folder = NULL,
 \item{alpha}{transparency for overlayed tracks, default 0.7.}
 
 \item{chr, xStart, xEnd}{subset bigWig, chromosome number, postion start and end.}
+
+\item{pad}{Default is TRUE, to align plots pad strings with spaces, using oncofunco::strPadLeft().}
 
 \item{title}{character string for plot title. Default is NULL, i.e.: no plot title.}
 }

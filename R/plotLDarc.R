@@ -46,6 +46,16 @@ plotLDarc <- function(LD = NULL,
   datLD <- LD[ LD$R2 > minR2 &
                  LD$BP_A != LD$BP_B &
                  LD$SNP_A %in% hits, ]
+  
+  # add back hits that are not in LD with any other SNP
+  datLD <- 
+    unique(
+      rbind(
+        datLD,
+        LD[ LD$SNP_A %in% hits &
+              LD$SNP_A == LD$SNP_B, ]
+      ))
+  
   # show only relationship between hits of 2 methods.
   if(hitsOnly){
     datLD <- datLD[ datLD$SNP_A %in% hits &
@@ -53,7 +63,7 @@ plotLDarc <- function(LD = NULL,
   
   # round to have less colour 
   datLD$R2 <- round(datLD$R2, 2)
-
+  
   # Check zoomStart, zoomEnd
   if(is.null(xStart)) xStart <- min(c(datLD$BP_A, datLD$BP_B), na.rm = TRUE) - 10000
   if(is.null(xEnd)) xEnd <- max(c(datLD$BP_A, datLD$BP_B), na.rm = TRUE) + 10000
@@ -85,14 +95,15 @@ plotLDarc <- function(LD = NULL,
         Y = 0.25,
         Yend = 0.5)))
   annotText <- annotText[ order(annotText$Y, annotText$BP), ]
-
+  
   annotText[ c(TRUE, FALSE), "Y"] <- annotText[ c(TRUE, FALSE), "Y"] - 0.05
   
   # Plot --------------------------------------------------------------------
   if(pad) statNames <- strPadLeft(statNames)
   
   gg_out <- 
-    ggplot(plotDat, aes(x = From, xend = To, y = 0.5, yend = 0.5, col = R2)) +
+    ggplot(plotDat[ plotDat$From != plotDat$To, ],
+           aes(x = From, xend = To, y = 0.5, yend = 0.5, col = R2)) +
     geom_segment(aes(x = BP, xend = BP,
                      y = Y, yend = Yend),
                  linetype = "dashed", col = "grey60",
@@ -110,7 +121,7 @@ plotLDarc <- function(LD = NULL,
     theme(axis.text.x = element_blank(),
           axis.ticks.x = element_blank(),
           axis.title = element_blank())
-
+  
   #Zoom
   gg_out <- gg_out + coord_cartesian(xlim = xRange)
   
@@ -119,4 +130,4 @@ plotLDarc <- function(LD = NULL,
   
   # Output ------------------------------------------------------------------
   gg_out
-  }
+}

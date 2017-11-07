@@ -10,10 +10,7 @@ theme_LE <- function(){
   # LocusExplorer ggplot custom theme
   # General options for all plots -------------------------------------------
   # Usage: ggplot() + theme_LE()
-  
-  if(Sys.info()['sysname'] == "Windows") 
-    windowsFonts(Courier = windowsFont("TT Courier New"))
-  
+
   theme(legend.position = "none",
         panel.background = element_rect(fill = "white"),
         panel.grid.minor = element_blank(),
@@ -23,8 +20,24 @@ theme_LE <- function(){
         axis.title.x = element_blank(),
         axis.line = element_blank(),
         panel.border = element_blank(),
-        # Y Axis font:
-        #   This will be obsolete once we know how to align plots using
-        #   maybe cowplot...
-        axis.text.y = element_text(family = "Courier", colour = "grey20"))
+        axis.text.y = element_text(colour = "grey20"))
+
+  #backup
+  # if(Sys.info()['sysname'] == "Windows")
+  #   windowsFonts(Courier = windowsFont("TT Courier New"))
+  #
+  # theme(legend.position = "none",
+  #       panel.background = element_rect(fill = "white"),
+  #       panel.grid.minor = element_blank(),
+  #       panel.grid.major.x = element_blank(),
+  #       panel.grid.major.y = element_line(colour = "grey60",
+  #                                         linetype = "dotted"),
+  #       axis.title.x = element_blank(),
+  #       axis.line = element_blank(),
+  #       panel.border = element_blank(),
+  #       # Y Axis font:
+  #       #   This will be obsolete once we know how to align plots using
+  #       #   maybe cowplot...
+  #       axis.text.y = element_text(family = "Courier", colour = "grey20"))
+
   }

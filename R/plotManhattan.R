@@ -11,7 +11,7 @@
 #' @param hitsName alternative SNP names to label in the plot. Default same as `hits`
 #' @param hitsLabel Default is TRUE, set to FALSE not to show SNP names on the plot.
 #' @param pad Default is TRUE, to align plots pad strings with spaces, using oncofunco::strPadLeft().
-#' @param title character string for plot title. Default is NULL, i.e.: no plot title. 
+#' @param title character string for plot title. Default is NULL, i.e.: no plot title.
 #' @param opts Default is c("Recombination","LD","LDSmooth","SuggestiveLine","GenomewideLine","Hits"), parts of plot to display.
 #' @export plotManhattan
 #' @author Tokhir Dadaev
@@ -25,7 +25,7 @@ plotManhattan <- function(
   geneticMap = NULL,
   suggestiveLine = 5,
   genomewideLine = 8,
-  xStart = NULL, #xStart=regionStartZoom; 
+  xStart = NULL, #xStart=regionStartZoom;
   xEnd = NULL, #xEnd = regionEndZoom
   hits = NULL,
   hitsName = hits,
@@ -34,7 +34,7 @@ plotManhattan <- function(
   title = NULL,
   opts = c("Recombination","LD","LDSmooth","SuggestiveLine",
            "GenomewideLine","Hits")){
-  
+
   # Check input - assoc -------------------------------------------------------
   #check assoc
   if(is.null(assoc)) stop("assoc is missing, must provide assoc with columns: c('SNP','BP','P')")
@@ -44,17 +44,18 @@ plotManhattan <- function(
   assoc <- as.data.frame(assoc)
   #set plog max
   assoc$PLog <- -log10(assoc$P)
-  
+
   # XY range ------------------------------------------------------------------
   if(is.null(xStart))xStart <- min(assoc$BP, na.rm = TRUE)
   if(is.null(xEnd))xEnd <- max(assoc$BP, na.rm = TRUE)
   yMax <- ceiling(max(c(10, assoc$PLog)))
-  yRange <- c(0, max(c(10, ceiling((yMax + 1)/5) * 5)))
+  yRangeBy <- ifelse(yMax >= 90, 10, 5)
+  yRange <- c(0, max(c(10, ceiling((yMax + 1)/yRangeBy) * yRangeBy)))
   xRange <- c(xStart, xEnd)
-  
+
   #yRangePLog <- c(0, round(max(-log10(assoc$P)) + 5, -1))
   #yRangePostProb <- c(0, 1)
-  
+
   #Check input - recomb -------------------------------------------------------
   if("Recombination" %in% opts){
     if(is.null(geneticMap)) stop("geneticMap data is missing for recombination, must have columns: c('BP', 'RECOMB')")
@@ -63,7 +64,7 @@ plotManhattan <- function(
       BP = geneticMap$BP,
       #adjust recomb value to pvalue
       RECOMB_ADJ = geneticMap$RECOMB * yMax / 100)}
-  
+
   # Plot all SNPs - background ------------------------------------------------
   gg_out <-
     ggplot(assoc, aes(x = BP, y = PLog)) +
@@ -71,23 +72,23 @@ plotManhattan <- function(
     geom_point(size = 4, colour = "#B8B8B8", shape = assoc$TYPED) +
     geom_hline(yintercept = seq(0, yMax, 5),
                linetype = "dotted", col = "grey60")
-  
+
   # Plot - Recombination ------------------------------------------------------
   if("Recombination" %in% opts & nrow(geneticMap) > 2 ){
     gg_out <- gg_out +
       geom_area(data = geneticMap,
                 aes(BP, RECOMB_ADJ),
                 fill = "#11d0ff", colour = "#00B4E0", alpha = 0.3)}
-  
-  
+
+
   # Check input - LD ----------------------------------------------------------
   if("LD" %in% opts | "LDSmooth" %in% opts){
     if(is.null(LD)) stop("LD is missing, must have columns: c('BP_A','SNP_A','BP_B','SNP_B','R2')")
     if(!all(c("BP_A","SNP_A","BP_B","SNP_B","R2") %in% colnames(LD)))
       stop("LD must have columns: c('BP_A','SNP_A','BP_B','SNP_B','R2')")
-    
+
     LD <- as.data.frame(LD)
-    
+
     if(is.null(hits)){
       hits <- unique(LD$SNP_A)
       hits <- hits[1:min(5, length(hits))]
@@ -97,16 +98,16 @@ plotManhattan <- function(
     } else {
       #hits <- sort(intersect(hits, LD$SNP_A))
       #hits <- intersect(hits, LD$SNP_A)
-      
+
       colourLD <- oncofunco::colourHue(length(hits))
       colourLDPalette <- unlist(lapply(colourLD, function(i){
         colorRampPalette(c("grey95", i))(100)}))
-      
+
       #merge LD with assoc, to get R2 shades per point
       plotDat <- merge(
         LD[ LD$SNP_A %in% hits, c("BP_A","SNP_A","BP_B","SNP_B","R2")],
         assoc[, c("BP", "TYPED", "PLog")],
-        by.x = "BP_B", by.y = "BP", all = TRUE) %>% 
+        by.x = "BP_B", by.y = "BP", all = TRUE) %>%
         mutate(
           LDColIndex = ifelse(round(R2,2) == 0, 1, round(R2, 2) * 100),
           hitColIndex = as.numeric(factor(SNP_A, levels = hits)),
@@ -131,10 +132,10 @@ plotManhattan <- function(
       }
     }
   } # END if("LD" %in% opts | "LDSmooth" %in% opts)
-  
-  
+
+
   # Suggestiveline ----------------------------------------------------------
-  if("SuggestiveLine" %in% opts & 
+  if("SuggestiveLine" %in% opts &
      !is.null(suggestiveLine) &
      suggestiveLine > 0){
     gg_out <- gg_out +
@@ -149,7 +150,7 @@ plotManhattan <- function(
       geom_hline(aes(yintercept = y), data = data.frame(y = genomewideLine),
                  size = 0.5,
                  colour = "#ca0020")}
-  
+
   # Mark Hits: shape and vline ----------------------------------------------
   if("Hits" %in% opts & !is.null(hits) & any(hits %in% assoc$SNP)){
     gg_out <- gg_out +
@@ -163,8 +164,8 @@ plotManhattan <- function(
                    aes(x = BP, y = 0, xend = BP, yend = PLog),
                    colour = "black",
                    linetype = "dashed")}
-  
-  
+
+
   # Mark Hits: Labels -------------------------------------------------------
   # SNP names on the plot for hits,
   # if alternative names given then use those, hitsName
@@ -172,44 +173,44 @@ plotManhattan <- function(
     if(!is.null(hitsLabel))
       if(hitsLabel){
         plotDat <- assoc[ assoc$SNP %in% hits, ]
-        
+
         if(all(hits == hitsName)) {
           plotDat$label <- plotDat$SNP
         } else {
-          
+
           x <- data.frame(SNP = hits, label = hitsName, stringsAsFactors = FALSE)
           plotDat <- merge(plotDat, x, by = "SNP")
-          
+
           #plotDat$label <- hitsName[match(plotDat$SNP, hits)]
         }
-        
+
         plotDat$label <- as.character(plotDat$label)
-        
-        gg_out <- 
+
+        gg_out <-
           gg_out +
           geom_text_repel(
             aes(BP, PLog, label = label),
             data = plotDat)
-        
-        
+
+
       }
-  
+
   # Add title ---------------------------------------------------------------
   if(!is.null(title)) gg_out <- gg_out + ggtitle(title)
-  
+
   # General options ---------------------------------------------------------
   gg_out <- gg_out +
     coord_cartesian(
       xlim = xRange,
       ylim = yRange) +
     scale_y_continuous(
-      breaks = seq(0, yRange[2], 5),
+      breaks = seq(0, yRange[2], yRangeBy),
       #labels = oncofunco::strPadLeft(seq(0, ROIPLogMax, 5)),
-      labels = if(pad){strPadLeft(seq(0, yRange[2], 5))} else {
-        seq(0, yRange[2], 5)},
+      labels = if(pad){strPadLeft(seq(0, yRange[2], yRangeBy))} else {
+        seq(0, yRange[2], yRangeBy)},
       name = expression(-log[10](italic(p)))) +
     scale_colour_identity()
-  
+
   # Output ------------------------------------------------------------------
   gg_out
 } #END plotManhattan

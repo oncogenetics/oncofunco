@@ -28,6 +28,9 @@ geno <- matrix(sample(c(0, 1, 2), 100, replace = TRUE), ncol = 4)
 # calculate MAF, returns 2 column matrix
 getMAF(geno)
 }
+\author{
+Tokhir Dadaev
+}
 \keyword{dosage}
 \keyword{maf}
 \keyword{snp}

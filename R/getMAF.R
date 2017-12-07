@@ -8,6 +8,7 @@
 #' @return a \code{matrix} object. First column is MAF (range 0-0.5), second column is 1 if the MAF is flipped, else 0.
 #' @keywords maf dosage snp
 #' @export getMAF
+#' @author Tokhir Dadaev
 #' @examples
 #' # dummy SNP data, 25 samples, 4 SNPs
 #' set.seed(123)
@@ -43,7 +44,7 @@ getMAF <- function(z = NULL, NoCall = 9, flip = TRUE, dosageMax = 2){
     maf <- cbind(maf = maf,
                  flipped = 0)
   }
-  
+
   #return MAF matrix
   return(maf)
 }

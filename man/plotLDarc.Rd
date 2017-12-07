@@ -9,7 +9,7 @@ plotLDarc(LD = NULL, xStart = NULL, xEnd = NULL, upper = NULL,
   hitsOnly = FALSE, pad = TRUE, title = NULL)
 }
 \arguments{
-\item{LD}{plink LD output format, data.frame object with c("BP_A","SNP_A","BP_B","SNP_B","R2") columns. Optional/recommended.}
+\item{LD}{plink LD output format, data.frame object with c("BP_A","SNP_A","BP_B","SNP_B","R2") columns.}
 
 \item{xStart, xEnd}{Region range, zoom, minimum BP and maximum BP, advised to keep this less than 5Mb.}
 

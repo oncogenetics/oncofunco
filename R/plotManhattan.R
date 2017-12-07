@@ -69,7 +69,7 @@ plotManhattan <- function(
   gg_out <-
     ggplot(assoc, aes(x = BP, y = PLog)) +
     # all snps grey hollow shapes
-    geom_point(size = 4, colour = "#B8B8B8", shape = assoc$TYPED) +
+    geom_point(size = 4, colour = "#B8B8B8", shape = assoc$TYPED, na.rm = TRUE) +
     geom_hline(yintercept = seq(0, yMax, 5),
                linetype = "dotted", col = "grey60")
 
@@ -122,13 +122,13 @@ plotManhattan <- function(
                      size = 4,
                      shape = plotDat$TYPED + 15,
                      col = plotDat$LDCol,
-                     alpha = 0.8)
+                     alpha = 0.8, na.rm = TRUE)
       }
       #LDSmooth
       if("LDSmooth" %in% opts){
         gg_out <- gg_out +
           geom_smooth(data = plotDat, aes(x = BP_B, y = R2Adj, col = hitCol),
-                      method = "loess", se = FALSE)
+                      method = "loess", se = FALSE, na.rm = TRUE)
       }
     }
   } # END if("LD" %in% opts | "LDSmooth" %in% opts)
@@ -157,7 +157,7 @@ plotManhattan <- function(
       #mark hit SNPs - outline shapes
       geom_point(data = assoc[ assoc$SNP %in% hits, ],
                  aes(x = BP, y = PLog, shape = TYPED),
-                 size = 4, colour = "black") +
+                 size = 4, colour = "black", na.rm = TRUE) +
       scale_shape_identity() +
       #mark hit SNPs - vertical lines
       geom_segment(data = assoc[ assoc$SNP %in% hits, ],

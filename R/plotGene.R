@@ -6,6 +6,7 @@
 #' @param chrom chromosome name, must be character class with length(chrom)==1, e.g.: chr1"
 #' @param chromStart,chromEnd Region range, zoom, minimum BP and maximum BP, advised to keep this less than 5Mb.
 #' @param vline Mark hits on genes
+#' @param pad Default is TRUE, to align plots pad strings with spaces, using oncofunco::strPadLeft().
 #' @keywords gene symbol granges plot
 #' @export plotGene
 #' @author Tokhir Dadaev
@@ -14,7 +15,8 @@
 plotGene <- function(chrom = NULL,
                      chromStart = NULL,
                      chromEnd = NULL,
-                     vline = NULL){
+                     vline = NULL,
+                     pad = TRUE){
   plotDatGeneN <- 1
 
   #get granges collapsed genes for ggplot+ggbio
@@ -25,20 +27,7 @@ plotGene <- function(chrom = NULL,
       annotate("text",
                x = chromStart + (chromEnd - chromStart)/2,
                y = 0.35,
-               label = "No gene") +
-      #general options
-      ylab("") +
-      xlim(c(chromStart, chromEnd)) +
-      theme(legend.position = "none",
-            panel.background = element_rect(fill="white"),
-            panel.grid.minor = element_blank(),
-            panel.grid.major = element_blank(),
-            axis.title = element_blank(),
-            axis.ticks = element_blank(),
-            axis.line = element_blank(),
-            panel.border = element_blank(),
-            #Y Axis font
-            axis.text = element_blank())
+               label = "No gene")
   } else {
 
     #number of genes in zoomed region, if no genes then 1
@@ -52,15 +41,15 @@ plotGene <- function(chrom = NULL,
       geom_hline(yintercept = c(1:plotDatGeneN),
                  col = "grey60", linetype = "dotted") +
       #ggbio plot genes
-      geom_alignment(data = plotDatGene,aes(group = gene_id,
-                                            fill = strand, col = strand)) +
-    # mark hit SNPs - vline
-    if(!is.null(vline)){
-      gg_out <- gg_out +
-        geom_vline(xintercept = vline,
-                   col = "black", #col = "#4daf4a",
-                   linetype = "dashed")
-    }
+      geom_alignment(data = plotDatGene, aes(group = gene_id,
+                                             fill = strand, col = strand)) +
+      # mark hit SNPs - vline
+      if(!is.null(vline)){
+        gg_out <- gg_out +
+          geom_vline(xintercept = vline,
+                     col = "black", #col = "#4daf4a",
+                     linetype = "dashed")
+      }
   }
   #return output ggplot
   return(list(genePlot = gg_out,

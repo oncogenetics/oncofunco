@@ -4,7 +4,8 @@
 \alias{plotGene}
 \title{Plot genes using ggbio::geom_alignment}
 \usage{
-plotGene(chrom = NULL, chromStart = NULL, chromEnd = NULL, vline = NULL)
+plotGene(chrom = NULL, chromStart = NULL, chromEnd = NULL, vline = NULL,
+  pad = TRUE)
 }
 \arguments{
 \item{chrom}{chromosome name, must be character class with length(chrom)==1, e.g.: chr1"}
@@ -12,6 +13,8 @@ plotGene(chrom = NULL, chromStart = NULL, chromEnd = NULL, vline = NULL)
 \item{chromStart, chromEnd}{Region range, zoom, minimum BP and maximum BP, advised to keep this less than 5Mb.}
 
 \item{vline}{Mark hits on genes}
+
+\item{pad}{Default is TRUE, to align plots pad strings with spaces, using oncofunco::strPadLeft().}
 }
 \value{
 a list with 2 objects: $genePlot \code{ggplot} object and $geneCount numeric

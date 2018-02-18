@@ -3,7 +3,7 @@
 #' LD plot for LocusExplorer.
 #' @param data plink LD output format, data.frame object with c("BP_A","SNP_A","BP_B","SNP_B","R2") columns.
 #' @param xStart,xEnd Region range, zoom, minimum BP and maximum BP, advised to keep this less than 5Mb.
-#' @param hits SNP names to label in the plot. Must be present in assoc data.frame.
+#' @param hits SNP names to label in the plot.
 #' @param pad Default is TRUE, to align plots pad strings with spaces, using oncofunco::strPadLeft().
 #' @param title character string for plot title. Default is NULL, i.e.: no plot title.
 #' @export plotLD
@@ -39,7 +39,7 @@ plotLD <- function(
             length(unique(data$SNP_A))))
   } else hits <- intersect(hits, data$SNP_A)
 
-  if(length(hits) > 0){
+  if(length(hits) > 0 & nrow(data) > 0){
     if(!all(hits %in% unique(data$SNP_A))){
       warning(paste0("Some SNPs (",
                      paste(setdiff(hits, unique(data$SNP_A)), collapse = ","),

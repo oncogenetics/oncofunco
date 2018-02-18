@@ -12,7 +12,7 @@ plotLD(data = NULL, xStart = NULL, xEnd = NULL, hits = NULL,
 
 \item{xStart, xEnd}{Region range, zoom, minimum BP and maximum BP, advised to keep this less than 5Mb.}
 
-\item{hits}{SNP names to label in the plot. Must be present in assoc data.frame.}
+\item{hits}{SNP names to label in the plot.}
 
 \item{pad}{Default is TRUE, to align plots pad strings with spaces, using oncofunco::strPadLeft().}
 

@@ -21,13 +21,14 @@ plotGene <- function(chrom = NULL,
 
   #get granges collapsed genes for ggplot+ggbio
   plotDatGene <- geneSymbol(chrom, chromStart, chromEnd)
+  
   if(is.null(plotDatGene)){
     gg_out <- ggplot() +
       geom_blank() +
       annotate("text",
                x = chromStart + (chromEnd - chromStart)/2,
                y = 0.35,
-               label = "No gene")
+               label = expression(No, gene[]))
   } else {
 
     #number of genes in zoomed region, if no genes then 1
@@ -35,7 +36,11 @@ plotGene <- function(chrom = NULL,
       length(unique(plotDatGene@elementMetadata$gene_id))}, silent = TRUE)
     if(class(plotDatGeneN) == "try-error"){ plotDatGeneN <- 1 }
 
-
+    # pad gene names to align
+    if(pad) {
+      plotDatGene@elementMetadata$gene_id <-
+        oncofunco::strPadLeft(plotDatGene@elementMetadata$gene_id)}
+    
     # return ggbio:gene plot
     gg_out <- ggplot() +
       geom_hline(yintercept = c(1:plotDatGeneN),
@@ -43,14 +48,19 @@ plotGene <- function(chrom = NULL,
       #ggbio plot genes
       geom_alignment(data = plotDatGene, aes(group = gene_id,
                                              fill = strand, col = strand)) +
-      # mark hit SNPs - vline
-      if(!is.null(vline)){
-        gg_out <- gg_out +
-          geom_vline(xintercept = vline,
-                     col = "black", #col = "#4daf4a",
-                     linetype = "dashed")
-      }
+      ylab(expression(Gene[]))
+    # mark hit SNPs - vline
+    if(!is.null(vline)){
+      gg_out <- gg_out +
+        geom_vline(xintercept = vline,
+                   col = "black", #col = "#4daf4a",
+                   linetype = "dashed")}
+    
+    
   }
+  
+  gg_out <- gg_out + coord_cartesian(xlim = c(chromStart, chromEnd))
+    
   #return output ggplot
   return(list(genePlot = gg_out,
               geneCnt = plotDatGeneN))

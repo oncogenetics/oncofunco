@@ -57,7 +57,7 @@ plotSNPtype <- function(
     scale_y_continuous(breaks = c(0.5, 1.5),
                        labels = if(pad) strPadLeft(c("Imputed", "Typed")) else c("Imputed", "Typed"),
                        #limits = c(-0.90, 2),
-                       name = "SNP") +
+                       name = expression(SNP[])) +
     #xlab(NULL) +
     theme(axis.text.x = element_blank(),
           axis.ticks.x = element_blank())

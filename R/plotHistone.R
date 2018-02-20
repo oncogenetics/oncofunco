@@ -77,7 +77,7 @@ plotHistone <- function(
       scale_y_continuous(breaks = 50,
                          labels = if(pad) strPadLeft("Histone") else "Histone",
                          limits = c(0, 100),
-                         name = "") 
+                         name = expression(ENCODE[])) 
   }
   
   # Add title ---------------------------------------------------------------

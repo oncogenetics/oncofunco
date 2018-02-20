@@ -88,16 +88,19 @@ geneSymbol <- function(chrom = NA, chromStart = NA, chromEnd = NA){
                            by=c("GENEID" = "ENTREZID"))
 
   # If not match on gene symbol, then TXNAME is gene symbol
-  TXID_GENEID$SYMBOL <- ifelse(is.na(TXID_GENEID$SYMBOL),
-                               TXID_GENEID$TXNAME,TXID_GENEID$SYMBOL)
-
+  # TXID_GENEID$SYMBOL <- ifelse(is.na(TXID_GENEID$SYMBOL),
+  #                              TXID_GENEID$TXNAME,TXID_GENEID$SYMBOL)
+  # UPDATE, drop TX that do not match to gene symbol:
+  TXID_GENEID <- TXID_GENEID[ !is.na(TXID_GENEID$SYMBOL), ]
+  
   # merge to add gene symbol
   Trans <- left_join(Trans,TXID_GENEID,
                      by=c("TXID","GENEID","TXNAME"))
 
   # If not match on gene symbol, then TXNAME is gene symbol
-  Trans$SYMBOL <- ifelse(is.na(Trans$SYMBOL),
-                         Trans$TXNAME,Trans$SYMBOL)
+  # Trans$SYMBOL <- ifelse(is.na(Trans$SYMBOL),
+  #                        Trans$TXNAME,Trans$SYMBOL)
+  Trans <- Trans[ !is.na(Trans$SYMBOL), ]
 
   #Make Granges object
   CollapsedGenes <-
@@ -106,10 +109,6 @@ geneSymbol <- function(chrom = NA, chromStart = NA, chromEnd = NA){
                     end=Trans$EXONEND),
             strand=Trans$EXONSTRAND)
   CollapsedGenes$gene_id <- Trans$SYMBOL
-
-  # pad gene names to align
-  CollapsedGenes@elementMetadata$gene_id <-
-    oncofunco::strPadLeft(CollapsedGenes@elementMetadata$gene_id)
 
   # Output ----------------------------------------------------------------
   #return collapsed genes per CHR

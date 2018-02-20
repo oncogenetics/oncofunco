@@ -10,8 +10,17 @@ theme_LE <- function(){
   # LocusExplorer ggplot custom theme
   # General options for all plots -------------------------------------------
   # Usage: ggplot() + theme_LE()
-
+  
+  # map fonts to OS
+  if(Sys.info()['sysname'] == "Windows")
+    windowsFonts(Courier = windowsFont("TT Courier New"))
+  
   theme(legend.position = "none",
+        plot.background = element_rect(
+          fill = "grey80"
+          #colour = "black",
+          #size = 1
+        ),
         panel.background = element_rect(fill = "white"),
         panel.grid.minor = element_blank(),
         panel.grid.major.x = element_blank(),
@@ -20,7 +29,8 @@ theme_LE <- function(){
         axis.title.x = element_blank(),
         axis.line = element_blank(),
         panel.border = element_blank(),
-        axis.text.y = element_text(colour = "grey20"))
+        axis.text.y = element_text(family = "Courier", colour = "grey20")
+        )
 
   #backup
   # if(Sys.info()['sysname'] == "Windows")

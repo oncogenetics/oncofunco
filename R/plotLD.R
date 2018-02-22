@@ -76,7 +76,7 @@ plotLD <- function(
       coord_cartesian(xlim = xRange) +
       scale_y_continuous(breaks = (1:length(hits)) + 0.5,
                          labels = if(pad) strPadLeft(hits) else substr(hits, 1, 20),
-                         limits = c(0, length(hits) + 1),
+                         #limits = c(0, length(hits) + 1),
                          name = expression(LD[])
                          #name = expression(R^2)
                          )

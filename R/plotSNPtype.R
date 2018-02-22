@@ -59,8 +59,8 @@ plotSNPtype <- function(
                        #limits = c(-0.90, 2),
                        name = expression(SNP[])) +
     #xlab(NULL) +
-    theme(axis.text.x = element_blank(),
-          axis.ticks.x = element_blank())
+    # theme(axis.text.x = element_blank(),
+    #       axis.ticks.x = element_blank())
   
   # Add title ---------------------------------------------------------------
   if(!is.null(title)) gg_out <- gg_out + ggtitle(title)

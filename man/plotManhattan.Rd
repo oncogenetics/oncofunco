@@ -7,8 +7,8 @@
 plotManhattan(assoc = NULL, LD = NULL, geneticMap = NULL,
   suggestiveLine = 5, genomewideLine = 8, xStart = NULL, xEnd = NULL,
   hits = NULL, hitsName = hits, hitsLabel = TRUE, pad = TRUE,
-  title = NULL, opts = c("Recombination", "LD", "LDSmooth",
-  "SuggestiveLine", "GenomewideLine", "Hits"))
+  postprob = FALSE, title = NULL, opts = c("Recombination", "LD",
+  "LDSmooth", "SuggestiveLine", "GenomewideLine", "Hits"))
 }
 \arguments{
 \item{assoc}{SNP association results, data.frame object with c("SNP","BP","P") columns. Required.}
@@ -30,6 +30,8 @@ plotManhattan(assoc = NULL, LD = NULL, geneticMap = NULL,
 \item{hitsLabel}{Default is TRUE, set to FALSE not to show SNP names on the plot.}
 
 \item{pad}{Default is TRUE, to align plots pad strings with spaces, using oncofunco::strPadLeft().}
+
+\item{postprob}{Default is FALSE, used for LocusExplorer to plot JAM PostProbs instead of Pvalues.}
 
 \item{title}{character string for plot title. Default is NULL, i.e.: no plot title.}
 

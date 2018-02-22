@@ -30,9 +30,10 @@ plotAnnot <- function(data,
   #plot
   gg_out <- 
     ggplot(data,
-           aes(xmin = BP, xmax = BP, ymin = TYPE2N - 1, ymax = TYPE2N,
+           aes(x = BP, xend = BP,
+               y = TYPE2N - 1, yend = TYPE2N,
                col = COLOUR_HEX, fill = COLOUR_HEX )) +
-    geom_rect(alpha = ifelse(collapse, 0.5, 1)) 
+    geom_segment(alpha = ifelse(collapse, 0.5, 1)) 
   
   if(collapse){
     gg_out <- gg_out +

@@ -11,6 +11,7 @@
 #' @param hitsName alternative SNP names to label in the plot. Default same as `hits`
 #' @param hitsLabel Default is TRUE, set to FALSE not to show SNP names on the plot.
 #' @param pad Default is TRUE, to align plots pad strings with spaces, using oncofunco::strPadLeft().
+#' @param postprob Default is FALSE, used for LocusExplorer to plot JAM PostProbs instead of Pvalues.
 #' @param title character string for plot title. Default is NULL, i.e.: no plot title.
 #' @param opts Default is c("Recombination","LD","LDSmooth","SuggestiveLine","GenomewideLine","Hits"), parts of plot to display.
 #' @export plotManhattan
@@ -25,12 +26,13 @@ plotManhattan <- function(
   geneticMap = NULL,
   suggestiveLine = 5,
   genomewideLine = 8,
-  xStart = NULL, #xStart=regionStartZoom;
-  xEnd = NULL, #xEnd = regionEndZoom
+  xStart = NULL, 
+  xEnd = NULL, 
   hits = NULL,
   hitsName = hits,
   hitsLabel = TRUE,
   pad = TRUE,
+  postprob = FALSE,
   title = NULL,
   opts = c("Recombination","LD","LDSmooth","SuggestiveLine",
            "GenomewideLine","Hits")){
@@ -53,6 +55,15 @@ plotManhattan <- function(
   yRange <- c(0, max(c(10, ceiling((yMax + 1)/yRangeBy) * yRangeBy)))
   xRange <- c(xStart, xEnd)
 
+  # If Y is post prob then update, range 0-1
+  if(postprob){
+    assoc$PLog <- assoc$P
+    yMax <- 1
+    yRangeBy <- 0.25
+    yRange <- c(0, 1)
+  }
+  
+  
   #yRangePLog <- c(0, round(max(-log10(assoc$P)) + 5, -1))
   #yRangePostProb <- c(0, 1)
 
@@ -208,7 +219,11 @@ plotManhattan <- function(
       #labels = oncofunco::strPadLeft(seq(0, ROIPLogMax, 5)),
       labels = if(pad){strPadLeft(seq(0, yRange[2], yRangeBy))} else {
         seq(0, yRange[2], yRangeBy)},
-      name = expression(-log[10](italic(p)))) +
+      name = if(postprob){
+        expression(PostProb[])
+      } else {expression(-log[10](italic(p)))}
+      
+      ) +
     scale_colour_identity()
 
   # Output ------------------------------------------------------------------

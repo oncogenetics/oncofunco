@@ -4,13 +4,15 @@
 \alias{plotGene}
 \title{Plot genes using ggbio::geom_alignment}
 \usage{
-plotGene(chrom = NULL, chromStart = NULL, chromEnd = NULL, vline = NULL,
-  pad = TRUE)
+plotGene(chrom = NULL, chromStart = NULL, chromEnd = NULL, hits = NULL,
+  vline = NULL, pad = TRUE)
 }
 \arguments{
 \item{chrom}{chromosome name, must be character class with length(chrom)==1, e.g.: chr1"}
 
 \item{chromStart, chromEnd}{Region range, zoom, minimum BP and maximum BP, advised to keep this less than 5Mb.}
+
+\item{hits}{Default NULL. Color genes based on strand and hits.}
 
 \item{vline}{Mark hits on genes}
 

@@ -38,7 +38,9 @@ plotAnnot <- function(data,
   if(collapse){
     gg_out <- gg_out +
       scale_y_continuous(
-        limits = c(-1, 4),
+        # limits = c(-1, 4),
+        # breaks = c(0:3) + 0.5, 
+        limits = c(0, 4),
         breaks = c(0:3) + 0.5, 
         labels = if(pad){
           strPadLeft(c("DNaseI", "Conserved", "ChromHMM", "eQTL")) } else {

@@ -20,11 +20,4 @@ strPadLeft <- function(labels, width = 15, pad = " "){
   
   #cut longer than width vars
   return(substr(x, 1, width))
-  
-  # @import stringr
-  # stringr::str_pad(string = labels,
-  #                  width = width,
-  #                  side = "left",
-  #                  pad = pad)}
-  # labels <- c("1", "12", "123", "1234", "12345")
 }

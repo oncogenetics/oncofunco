@@ -83,6 +83,37 @@ plotManhattan <- function(
     geom_point(size = 4, colour = "#B8B8B8", shape = assoc$TYPED, na.rm = TRUE) +
     geom_hline(yintercept = seq(0, yMax, 5),
                linetype = "dotted", col = "grey60")
+  
+  # Plot - Effect -----------------------------------------------------------
+  if("Effect" %in% opts & "EFFECT" %in% colnames(assoc)){
+    datEffect <- assoc %>% 
+      transmute(
+        BP = BP,
+        log_OR = EFFECT,
+        y_loess = predict(loess(log_OR ~ BP, span = 0.1)),
+        y_loess_adj = scales::rescale(y_loess, to = c(yRange[2]/4 * 3, yRange[2])), 
+        vline = c(0, diff(sign(y_loess))) != 0)
+    
+    datEffect_shade <- datEffect %>% 
+      filter(vline) %>% 
+      transmute(
+        xStart = BP,
+        xEnd = lead(BP),
+        yStart = 0,
+        yEnd = yRange[2])
+    #datEffect_shade$fill <- head(rep(c("grey60", "grey40"), nrow(datEffect_shade)/2 + 1), nrow(datEffect_shade))
+    datEffect_shade$fill <- head(rep(c("#996777", "#c5a8b1"), nrow(datEffect_shade)/2 + 1), nrow(datEffect_shade))
+    
+    gg_out <- gg_out +
+      geom_line(data = datEffect, aes(BP, y_loess_adj), col = "#6E273D") +
+      geom_rect(data = na.omit(datEffect_shade),
+                aes(xmin = xStart, xmax = xEnd, ymin = yStart, ymax = yEnd,
+                    fill = fill, alpha = 0.5),
+                inherit.aes = FALSE, alpha = 0.2) +
+      scale_fill_identity()
+    }
+  
+  
 
   # Plot - Recombination ------------------------------------------------------
   if("Recombination" %in% opts & nrow(geneticMap) > 2 ){
@@ -148,6 +179,8 @@ plotManhattan <- function(
   # Suggestiveline ----------------------------------------------------------
   if("SuggestiveLine" %in% opts &
      !is.null(suggestiveLine) &
+     !is.na(suggestiveLine) &
+     is.numeric(suggestiveLine) &
      suggestiveLine > 0){
     gg_out <- gg_out +
       geom_hline(aes(yintercept = y), data = data.frame(y = suggestiveLine),
@@ -156,6 +189,8 @@ plotManhattan <- function(
   # Genomewideline ----------------------------------------------------------
   if("GenomewideLine" %in% opts &
      !is.null(genomewideLine) &
+     !is.na(genomewideLine) &
+     is.numeric(genomewideLine) &
      genomewideLine > 0){
     gg_out <- gg_out +
       geom_hline(aes(yintercept = y), data = data.frame(y = genomewideLine),

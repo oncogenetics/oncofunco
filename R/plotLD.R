@@ -44,6 +44,11 @@ plotLD <- function(
       warning(paste0("Some SNPs (",
                      paste(setdiff(hits, unique(data$SNP_A)), collapse = ","),
                      ") did not match to data."))}
+    #order hits by BP
+    #c("BP_A","SNP_A","BP_B","SNP_B","R2")
+    data <- as.data.frame(data)
+    data <- data[ order(data$BP_A), ]
+    hits <- unique(data[data$SNP_A %in% hits, "SNP_A"])
 
     # plot LD per hit SNPs on seperate Yaxis 1,2,3, etc.
     #colours for hits and pallete for R2 shades
@@ -54,6 +59,7 @@ plotLD <- function(
     # LD with R2 shades per segment matching Manhattan plot colours
     plotDat <- data %>%
       filter(SNP_A %in% hits) %>%
+      arrange(BP_A) %>% 
       transmute(
         x = BP_B,
         xend = BP_B,

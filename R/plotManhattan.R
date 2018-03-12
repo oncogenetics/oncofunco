@@ -44,6 +44,7 @@ plotManhattan <- function(
   # if SNP type is missing set all as typed
   if(!"TYPED" %in% colnames(assoc)){assoc$TYPED <- 2}
   assoc <- as.data.frame(assoc)
+  assoc <- assoc[ order(assoc$BP), ]
   #set plog max
   assoc$PLog <- -log10(assoc$P)
 
@@ -150,8 +151,9 @@ plotManhattan <- function(
         LD[ LD$SNP_A %in% hits, c("BP_A","SNP_A","BP_B","SNP_B","R2")],
         assoc[, c("BP", "TYPED", "PLog")],
         by.x = "BP_B", by.y = "BP", all = TRUE) %>%
+        arrange(BP_A) %>% 
         mutate(
-          LDColIndex = ifelse(round(R2,2) == 0, 1, round(R2, 2) * 100),
+          LDColIndex = ifelse(round(R2, 2) == 0, 1, round(R2, 2) * 100),
           hitColIndex = as.numeric(factor(SNP_A, levels = hits)),
           hitCol = colourLD[hitColIndex],
           LDCol = colourLDPalette[(hitColIndex - 1) * 100 + LDColIndex],
@@ -219,6 +221,7 @@ plotManhattan <- function(
     if(!is.null(hitsLabel))
       if(hitsLabel){
         plotDat <- assoc[ assoc$SNP %in% hits, ]
+        plotDat$rn <- 1:nrow(plotDat)
 
         if(all(hits == hitsName)) {
           plotDat$label <- plotDat$SNP
@@ -226,8 +229,7 @@ plotManhattan <- function(
 
           x <- data.frame(SNP = hits, label = hitsName, stringsAsFactors = FALSE)
           plotDat <- merge(plotDat, x, by = "SNP")
-
-          #plotDat$label <- hitsName[match(plotDat$SNP, hits)]
+          plotDat <- plotDat[ order(plotDat$rn), ]
         }
 
         plotDat$label <- as.character(plotDat$label)
@@ -251,6 +253,7 @@ plotManhattan <- function(
       ylim = yRange) +
     scale_y_continuous(
       breaks = seq(0, yRange[2], yRangeBy),
+      #expand = expand_scale(add = 0.5),
       #labels = oncofunco::strPadLeft(seq(0, ROIPLogMax, 5)),
       labels = if(pad){strPadLeft(seq(0, yRange[2], yRangeBy))} else {
         seq(0, yRange[2], yRangeBy)},

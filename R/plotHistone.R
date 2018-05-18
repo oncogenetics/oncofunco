@@ -54,11 +54,11 @@ plotHistone <- function(
       rbindlist(
         #seven bigwig files
         lapply(seq(files), function(i){
-          #i = 1
+          #i = 5
           x <- as.data.frame(import(files[i], which = gr))
           x <- x[ x$score > 5, c("start", "end", "score")]
           x$score <- round(ifelse(x$score >= 100, 100, x$score),0)
-          if(nrow(x) == 0) {NULL} else {x$name <- name[i]}
+          if(nrow(x) == 0) {x <- NULL} else {x$name <- name[i]}
           #return
           x
         }))

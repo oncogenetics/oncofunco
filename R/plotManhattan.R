@@ -10,8 +10,10 @@
 #' @param hits SNP names to label in the plot. Must be present in assoc data.frame.
 #' @param hitsName alternative SNP names to label in the plot. Default same as `hits`
 #' @param hitsLabel Default is TRUE, set to FALSE not to show SNP names on the plot.
+#' @param hitsColour Default NULL, uses ggplot colours.
 #' @param pad Default is TRUE, to align plots pad strings with spaces, using oncofunco::strPadLeft().
 #' @param postprob Default is FALSE, used for LocusExplorer to plot JAM PostProbs instead of Pvalues.
+#' @param yRangeBy y-axis ticks, setting to 5 means ticks will be placed at `c(0, 5, 10, ...)`.
 #' @param title character string for plot title. Default is NULL, i.e.: no plot title.
 #' @param opts Default is c("Recombination","LD","LDSmooth","SuggestiveLine","GenomewideLine","Hits"), parts of plot to display.
 #' @export plotManhattan
@@ -31,12 +33,14 @@ plotManhattan <- function(
   hits = NULL,
   hitsName = hits,
   hitsLabel = TRUE,
+  hitsColour = NULL,
   pad = TRUE,
   postprob = FALSE,
+  yRangeBy = NULL,
   title = NULL,
   opts = c("Recombination","LD","LDSmooth","SuggestiveLine",
            "GenomewideLine","Hits")){
-
+  
   # Check input - assoc -------------------------------------------------------
   #check assoc
   if(is.null(assoc)) stop("assoc is missing, must provide assoc with columns: c('SNP','BP','P')")
@@ -47,15 +51,15 @@ plotManhattan <- function(
   assoc <- assoc[ order(assoc$BP), ]
   #set plog max
   assoc$PLog <- -log10(assoc$P)
-
+  
   # XY range ------------------------------------------------------------------
-  if(is.null(xStart))xStart <- min(assoc$BP, na.rm = TRUE)
-  if(is.null(xEnd))xEnd <- max(assoc$BP, na.rm = TRUE)
+  if(is.null(xStart)) xStart <- min(assoc$BP, na.rm = TRUE)
+  if(is.null(xEnd)) xEnd <- max(assoc$BP, na.rm = TRUE)
   yMax <- ceiling(max(c(10, assoc$PLog)))
-  yRangeBy <- ifelse(yMax >= 90, 10, 5)
+  if(is.null(yRangeBy)) yRangeBy <- ifelse(yMax >= 90, 10, 5)
   yRange <- c(0, max(c(10, ceiling((yMax + 1)/yRangeBy) * yRangeBy)))
   xRange <- c(xStart, xEnd)
-
+  
   # If Y is post prob then update, range 0-1
   if(postprob){
     assoc$PLog <- assoc$P
@@ -67,7 +71,7 @@ plotManhattan <- function(
   
   #yRangePLog <- c(0, round(max(-log10(assoc$P)) + 5, -1))
   #yRangePostProb <- c(0, 1)
-
+  
   #Check input - recomb -------------------------------------------------------
   if("Recombination" %in% opts){
     if(is.null(geneticMap)) stop("geneticMap data is missing for recombination, must have columns: c('BP', 'RECOMB')")
@@ -76,13 +80,13 @@ plotManhattan <- function(
       BP = geneticMap$BP,
       #adjust recomb value to pvalue
       RECOMB_ADJ = geneticMap$RECOMB * yMax / 100)}
-
+  
   # Plot all SNPs - background ------------------------------------------------
   gg_out <-
     ggplot(assoc, aes(x = BP, y = PLog)) +
     # all snps grey hollow shapes
     geom_point(size = 4, colour = "#B8B8B8", shape = assoc$TYPED, na.rm = TRUE) +
-    geom_hline(yintercept = seq(0, yMax, 5),
+    geom_hline(yintercept = seq(0, yMax, yRangeBy),
                linetype = "dotted", col = "grey60")
   
   # Plot - Effect -----------------------------------------------------------
@@ -112,72 +116,74 @@ plotManhattan <- function(
                     fill = fill, alpha = 0.5),
                 inherit.aes = FALSE, alpha = 0.2) +
       scale_fill_identity()
-    }
+  }
   
   
-
+  
   # Plot - Recombination ------------------------------------------------------
   if("Recombination" %in% opts & nrow(geneticMap) > 2 ){
     gg_out <- gg_out +
       geom_area(data = geneticMap,
                 aes(BP, RECOMB_ADJ),
                 fill = "#11d0ff", colour = "#00B4E0", alpha = 0.3)}
-
-
+  
+  
   # Check input - LD ----------------------------------------------------------
   if("LD" %in% opts | "LDSmooth" %in% opts){
     if(is.null(LD)) stop("LD is missing, must have columns: c('BP_A','SNP_A','BP_B','SNP_B','R2')")
     if(!all(c("BP_A","SNP_A","BP_B","SNP_B","R2") %in% colnames(LD)))
       stop("LD must have columns: c('BP_A','SNP_A','BP_B','SNP_B','R2')")
-
+    
     LD <- as.data.frame(LD)
-
+    
     if(is.null(hits)){
       hits <- unique(LD$SNP_A)
       hits <- hits[1:min(5, length(hits))]
       warning(
         paste("hits missing, selected first <5 SNPs as hits from LD$SNP_A, n = :",
               length(unique(LD$SNP_A))))
-    } else {
-      #hits <- sort(intersect(hits, LD$SNP_A))
-      #hits <- intersect(hits, LD$SNP_A)
-
-      colourLD <- oncofunco::colourHue(length(hits))
-      colourLDPalette <- unlist(lapply(colourLD, function(i){
-        colorRampPalette(c("grey95", i))(100)}))
-
-      #merge LD with assoc, to get R2 shades per point
-      plotDat <- merge(
-        LD[ LD$SNP_A %in% hits, c("BP_A","SNP_A","BP_B","SNP_B","R2")],
-        assoc[, c("BP", "TYPED", "PLog")],
-        by.x = "BP_B", by.y = "BP", all = TRUE) %>%
-        arrange(BP_A) %>% 
-        mutate(
-          LDColIndex = ifelse(round(R2, 2) == 0, 1, round(R2, 2) * 100),
-          hitColIndex = as.numeric(factor(SNP_A, levels = hits)),
-          hitCol = colourLD[hitColIndex],
-          LDCol = colourLDPalette[(hitColIndex - 1) * 100 + LDColIndex],
-          R2Adj = yMax * R2 * 0.8)
-      # Plot - LD Fill & LD Smooth --------------------------------------------
-      #LD fill
-      if("LD" %in% opts){
-        gg_out <- gg_out +
-          geom_point(data = plotDat, aes(BP_B, PLog, colour = LDCol),
-                     size = 4,
-                     shape = plotDat$TYPED + 15,
-                     col = plotDat$LDCol,
-                     alpha = 0.8, na.rm = TRUE)
-      }
-      #LDSmooth
-      if("LDSmooth" %in% opts){
-        gg_out <- gg_out +
-          geom_smooth(data = plotDat, aes(x = BP_B, y = R2Adj, col = hitCol),
-                      method = "loess", se = FALSE, na.rm = TRUE)
-      }
     }
+    
+    if(is.null(hitsColour)){
+      colourLD <- oncofunco::colourHue(length(hits))
+    } else {
+      colourLD <- hitsColour#[ seq_along(hits) ]
+      }
+    colourLDPalette <- unlist(lapply(colourLD, function(i){
+      colorRampPalette(c("grey95", i))(100)}))
+    
+    #merge LD with assoc, to get R2 shades per point
+    plotDat <- merge(
+      LD[ LD$SNP_A %in% hits, c("BP_A","SNP_A","BP_B","SNP_B","R2")],
+      assoc[, c("BP", "TYPED", "PLog")],
+      by.x = "BP_B", by.y = "BP", all = TRUE) %>%
+      arrange(BP_A) %>% 
+      mutate(
+        LDColIndex = ifelse(round(R2, 2) == 0, 1, round(R2, 2) * 100),
+        hitColIndex = as.numeric(factor(SNP_A, levels = hits)),
+        hitCol = colourLD[hitColIndex],
+        LDCol = colourLDPalette[(hitColIndex - 1) * 100 + LDColIndex],
+        R2Adj = yMax * R2 * 0.8)
+    # Plot - LD Fill & LD Smooth --------------------------------------------
+    #LD fill
+    if("LD" %in% opts){
+      gg_out <- gg_out +
+        geom_point(data = plotDat, aes(BP_B, PLog, colour = LDCol),
+                   size = 4,
+                   shape = plotDat$TYPED + 15,
+                   col = plotDat$LDCol,
+                   alpha = 0.8, na.rm = TRUE)
+    }
+    #LDSmooth
+    if("LDSmooth" %in% opts){
+      gg_out <- gg_out +
+        geom_smooth(data = plotDat, aes(x = BP_B, y = R2Adj, col = hitCol),
+                    method = "loess", se = FALSE, na.rm = TRUE)
+    }
+    
   } # END if("LD" %in% opts | "LDSmooth" %in% opts)
-
-
+  
+  
   # Suggestiveline ----------------------------------------------------------
   if("SuggestiveLine" %in% opts &
      !is.null(suggestiveLine) &
@@ -198,7 +204,7 @@ plotManhattan <- function(
       geom_hline(aes(yintercept = y), data = data.frame(y = genomewideLine),
                  size = 0.5,
                  colour = "#ca0020")}
-
+  
   # Mark Hits: shape and vline ----------------------------------------------
   if("Hits" %in% opts & !is.null(hits) & any(hits %in% assoc$SNP)){
     gg_out <- gg_out +
@@ -212,8 +218,8 @@ plotManhattan <- function(
                    aes(x = BP, y = 0, xend = BP, yend = PLog),
                    colour = "black",
                    linetype = "dashed")}
-
-
+  
+  
   # Mark Hits: Labels -------------------------------------------------------
   # SNP names on the plot for hits,
   # if alternative names given then use those, hitsName
@@ -222,30 +228,30 @@ plotManhattan <- function(
       if(hitsLabel){
         plotDat <- assoc[ assoc$SNP %in% hits, ]
         plotDat$rn <- 1:nrow(plotDat)
-
+        
         if(all(hits == hitsName)) {
           plotDat$label <- plotDat$SNP
         } else {
-
+          
           x <- data.frame(SNP = hits, label = hitsName, stringsAsFactors = FALSE)
           plotDat <- merge(plotDat, x, by = "SNP")
           plotDat <- plotDat[ order(plotDat$rn), ]
         }
-
+        
         plotDat$label <- as.character(plotDat$label)
-
+        
         gg_out <-
           gg_out +
           geom_text_repel(
             aes(BP, PLog, label = label),
             data = plotDat)
-
-
+        
+        
       }
-
+  
   # Add title ---------------------------------------------------------------
   if(!is.null(title)) gg_out <- gg_out + ggtitle(title)
-
+  
   # General options ---------------------------------------------------------
   gg_out <- gg_out +
     coord_cartesian(
@@ -261,9 +267,9 @@ plotManhattan <- function(
         expression(PostProb[])
       } else {expression(-log[10](italic(p)))}
       
-      ) +
+    ) +
     scale_colour_identity()
-
+  
   # Output ------------------------------------------------------------------
   gg_out
 } #END plotManhattan

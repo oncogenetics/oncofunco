@@ -5,7 +5,8 @@
 \title{LocusExplorer - LD plot}
 \usage{
 plotLD(data = NULL, xStart = NULL, xEnd = NULL, hits = NULL,
-  hitsLabel = TRUE, pad = TRUE, title = NULL)
+  hitsName = hits, hitsColour = NULL, hitsLabel = TRUE, pad = TRUE,
+  title = NULL)
 }
 \arguments{
 \item{data}{plink LD output format, data.frame object with c("BP_A","SNP_A","BP_B","SNP_B","R2") columns.}
@@ -13,6 +14,10 @@ plotLD(data = NULL, xStart = NULL, xEnd = NULL, hits = NULL,
 \item{xStart, xEnd}{Region range, zoom, minimum BP and maximum BP, advised to keep this less than 5Mb.}
 
 \item{hits}{SNP names to label in the plot.}
+
+\item{hitsName}{alternative SNP names to label in the plot. Default same as `hits`}
+
+\item{hitsColour}{Default NULL, uses ggplot colours.}
 
 \item{pad}{Default is TRUE, to align plots pad strings with spaces, using oncofunco::strPadLeft().}
 

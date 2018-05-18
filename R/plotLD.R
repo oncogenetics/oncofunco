@@ -4,6 +4,8 @@
 #' @param data plink LD output format, data.frame object with c("BP_A","SNP_A","BP_B","SNP_B","R2") columns.
 #' @param xStart,xEnd Region range, zoom, minimum BP and maximum BP, advised to keep this less than 5Mb.
 #' @param hits SNP names to label in the plot.
+#' @param hitsName alternative SNP names to label in the plot. Default same as `hits`
+#' @param hitsColour Default NULL, uses ggplot colours.
 #' @param pad Default is TRUE, to align plots pad strings with spaces, using oncofunco::strPadLeft().
 #' @param title character string for plot title. Default is NULL, i.e.: no plot title.
 #' @export plotLD
@@ -16,6 +18,8 @@ plotLD <- function(
   xStart = NULL,
   xEnd = NULL,
   hits = NULL,
+  hitsName = hits,
+  hitsColour = NULL,
   hitsLabel = TRUE,
   pad = TRUE,
   title = NULL){
@@ -52,7 +56,11 @@ plotLD <- function(
 
     # plot LD per hit SNPs on seperate Yaxis 1,2,3, etc.
     #colours for hits and pallete for R2 shades
-    colourLD <- colourHue(length(hits))
+    if(is.null(hitsColour)){
+      colourLD <- oncofunco::colourHue(length(hits))
+    } else {
+      colourLD <- hitsColour[ seq_along(hits) ]
+    }
     colourLDPalette <- unlist(lapply(colourLD, function(i){
       colorRampPalette(c("grey95", i))(100)}))
 

@@ -20,7 +20,7 @@ gen2dose <- function(genFile, sampleFile, chrName){
   # collapse every 3 gen columns for each sample into 1 as:
   #  0*AA + 1*AB + 2*BB 
   
-  gen <- data.table::fread(genFile)
+  gen <- data.table::fread(genFile, data.table = FALSE)
   if(missing(sampleFile)){
     # if sample file is missing, then generate sampleIDs, gen file
     # has 5 leading MAP columns, then 3 columns per sample IDs.

@@ -39,6 +39,6 @@ gen2dose <- function(genFile, sampleFile, chrName){
   
   
   outDOSE <- cbind(MAP, AB_BB)
-  
+  setDT(outDOSE)
   return(outDOSE)
 }

@@ -30,10 +30,10 @@ gen2dose <- function(genFile, sampleFile, chrName){
   }
   
   
-  MAP <- cbind(chrName, gen[, 1:5, with = FALSE ])
+  MAP <- cbind(chrName, gen[, 1:5 ])
   
-  AB <- gen[, seq(7, ncol(gen), 3), with = FALSE]
-  BB <- gen[, seq(8, ncol(gen), 3), with = FALSE] * 2
+  AB <- gen[, seq(7, ncol(gen), 3), drop = FALSE]
+  BB <- gen[, seq(8, ncol(gen), 3), drop = FALSE] * 2
   AB_BB <- AB + BB
   colnames(AB_BB) <- sampleID
   

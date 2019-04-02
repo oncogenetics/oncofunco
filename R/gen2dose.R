@@ -26,7 +26,7 @@ gen2dose <- function(genFile, sampleFile, chrName){
     # has 5 leading MAP columns, then 3 columns per sample IDs.
     sampleID <- make.names(seq((ncol(gen)-5)/3))
   } else {
-    sampleID <- data.table::fread(sampleFile, skip = 2)[,V1]
+    sampleID <- data.table::fread(sampleFile, skip = 2, select = 1)[[ 1 ]]
   }
   
   

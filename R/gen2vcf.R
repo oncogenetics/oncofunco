@@ -14,7 +14,7 @@
 #' @export gen2vcf
 
 gen2vcf <- function(genFile, sampleFile, chrName,
-                    outVCFFile, outVCFHeader,
+                    outVCFFile, outVCFHeader = "##fileformat=VCFv4.1",
                     subsetSNPs = NULL, subsetSamples = NULL){
   # - convert to VCF format for http://fastqtl.sourceforge.net/
   

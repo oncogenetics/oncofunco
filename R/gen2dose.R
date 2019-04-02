@@ -30,7 +30,7 @@ gen2dose <- function(genFile, sampleFile, chrName){
   }
   
   
-  MAP <- cbind(chrName, gen[, 1:5 ])
+  MAP <- cbind(chrom = chrName, gen[, 1:5 ])
   
   AB <- gen[, seq(7, ncol(gen), 3), drop = FALSE]
   BB <- gen[, seq(8, ncol(gen), 3), drop = FALSE] * 2
@@ -38,7 +38,7 @@ gen2dose <- function(genFile, sampleFile, chrName){
   colnames(AB_BB) <- sampleID
   
   
-  outDOSE <- cbind(MAP, AB_BB)
-  setDT(outDOSE)
+  outDOSE <- data.table::data.table(cbind(MAP, AB_BB))
+  
   return(outDOSE)
 }

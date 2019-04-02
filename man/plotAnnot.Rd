@@ -4,8 +4,8 @@
 \alias{plotAnnot}
 \title{LocusExplorer - Annotation plot, collapsed}
 \usage{
-plotAnnot(data, chrom = NULL, xStart = NULL, xEnd = NULL, vline = NULL,
-  collapse = FALSE, pad = TRUE)
+plotAnnot(data, chrom = NULL, xStart = NULL, xEnd = NULL,
+  vline = NULL, collapse = FALSE, pad = TRUE)
 }
 \arguments{
 \item{data}{dataframe with c(CHR, BP, TYPE1, TYPE2, COLOUR_HEX, TYPE2N) columns.}

@@ -35,19 +35,19 @@ gen2vcf <- function(genFile, sampleFile, chrName,
   
   dose <- gen2dose(genFile = genFile, sampleFile = sampleFile,
                    chrName = chrName)
+   dose <- gen2dose(genFile = "example.gen", sampleFile = "example.sample",
+                    chrName = "22")
+  
+  d1 <- dose[, c("V3", "V2", "V4", "V5")]
+  colnames(d1) <- c("POS", "ID", "REF", "ALT")
+  d2 <- data.table::data.table(QUAL = 100,
+                   FILTER = "PASS",
+                   INFO = "INFO",
+                   FORMAT = "DS")
   
   outVCF <- cbind(
     #VCF 9 fixed, mandatory columns.
-    #`#CHROM` = paste0("chr", dose$chrName),
-    `#CHROM` = chrName,
-    dose[, list(POS = V3,
-                ID = V2,
-                REF = V4,
-                ALT = V5,
-                QUAL = 100,
-                FILTER = "PASS",
-                INFO = "INFO",
-                FORMAT = "DS") ],
+    "#CHROM" = chrName, d1, d2,
     #VCF genotype as dosage
     dose[, 7:ncol(dose), with = FALSE])
   

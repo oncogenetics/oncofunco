@@ -1,7 +1,11 @@
 Package: oncofunco
 Title: Custom function for Oncogenetics team
 Version: 0.0.0.9000
-Authors@R: person("Tokhir", "Dadaev", email = "tokhir.dadaev@icr.ac.uk", role = c("aut", "cre"))
+Authors@R: person(given = "Tokhir",
+                  family = "Dadaev", 
+                  email = "tokhir.dadaev@icr.ac.uk", 
+                  role = c("aut", "cre"),
+                  comment = c(ORCID = "0000-0002-8268-0438"))
 Description: Collection of useful custom functions.
 Depends: R (>= 3.2.4)
 URL: http://github.com/oncogenetics/oncofunco

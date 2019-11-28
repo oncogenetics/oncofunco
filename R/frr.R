@@ -2,12 +2,14 @@
 #'
 #' This function calculates FRR and Contribution of FRR percentage.
 #' @param data is data.frame object with 3 columns, `c("snp", "maf", "est")`.
-#' @param FamilialRisk Familial risk to first-degree relatives of cancer cases. Default is 2.
+#' @param familialRisk Familial risk to first-degree relatives of cancer cases. Default is 2.
 #' @return data.frame with FRR and ContributionFRR columns.
 #' @keywords risk snp familial frr
 #' @export frr
+#' @author Tokhir Dadaev
 
-frr <- function(data, FamilialRisk = 2){
+
+frr <- function(data, familialRisk = 2){
   
   # check input
   if(missing(data)) stop("data is missing: data.frame with 3 columns, c('snp', 'maf', 'est')")
@@ -21,12 +23,11 @@ frr <- function(data, FamilialRisk = 2){
   
   FRR <- (maf * exp(est)^2 + (1 - maf)) /
          (maf * exp(est)   + (1 - maf))^2
-  ContributionFRR <- log(FRR)/(log(FamilialRisk)/100)
+  ContributionFRR <- log(FRR)/(log(familialRisk)/100)
   
-  data.frame(FRR, ContributionFRR)
+  return(data.frame(FRR, ContributionFRR))
+  
   }
-
-
 
 # dummy data
 # df1 <- read.table(text = "snp	maf	est

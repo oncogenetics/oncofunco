@@ -4,9 +4,17 @@
 \alias{plotSNPtype}
 \title{LocusExplorer - SNP type plot}
 \usage{
-plotSNPtype(assoc = NULL, xStart = NULL, xEnd = NULL, pad = TRUE,
-  title = NULL, typedColName = "TYPED", typedValue = 2,
-  colTyped = "#003333", colImputed = "#669999")
+plotSNPtype(
+  assoc = NULL,
+  xStart = NULL,
+  xEnd = NULL,
+  pad = TRUE,
+  title = NULL,
+  typedColName = "TYPED",
+  typedValue = 2,
+  colTyped = "#003333",
+  colImputed = "#669999"
+)
 }
 \arguments{
 \item{assoc}{SNP association results, data.frame object with c("SNP","BP","P") columns. Required.}

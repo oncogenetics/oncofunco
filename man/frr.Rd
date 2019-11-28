@@ -4,18 +4,21 @@
 \alias{frr}
 \title{Calculate Familial Relative Risk (FRR)}
 \usage{
-frr(data, FamilialRisk = 2)
+frr(data, familialRisk = 2)
 }
 \arguments{
 \item{data}{is data.frame object with 3 columns, `c("snp", "maf", "est")`.}
 
-\item{FamilialRisk}{Familial risk to first-degree relatives of cancer cases. Default is 2.}
+\item{familialRisk}{Familial risk to first-degree relatives of cancer cases. Default is 2.}
 }
 \value{
 data.frame with FRR and ContributionFRR columns.
 }
 \description{
 This function calculates FRR and Contribution of FRR percentage.
+}
+\author{
+Tokhir Dadaev
 }
 \keyword{familial}
 \keyword{frr}

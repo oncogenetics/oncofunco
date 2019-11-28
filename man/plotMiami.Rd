@@ -4,11 +4,20 @@
 \alias{plotMiami}
 \title{Miami plot}
 \usage{
-plotMiami(dat = NULL, hits = NULL, hitsName = hits,
-  hitsLabel = TRUE, hitsColour = NULL, pMinFilter = 0.05,
-  pMaxCap = 1/10^50, yRange = c(-50, 50), yRangeBy = 5,
-  colP1 = c("green", "limegreen"), colP2 = c("lightblue", "blue"),
-  title = c("My Main Title", "My Top Title", "My Bottom Title"))
+plotMiami(
+  dat = NULL,
+  hits = NULL,
+  hitsName = hits,
+  hitsLabel = TRUE,
+  hitsColour = NULL,
+  pMinFilter = 0.05,
+  pMaxCap = 1/10^50,
+  yRange = c(-50, 50),
+  yRangeBy = 5,
+  colP1 = c("green", "limegreen"),
+  colP2 = c("lightblue", "blue"),
+  title = c("My Main Title", "My Top Title", "My Bottom Title")
+)
 }
 \arguments{
 \item{dat}{SNP association results, data.frame object with c("SNP","BP","P") columns. Required.}

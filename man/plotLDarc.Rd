@@ -4,9 +4,18 @@
 \alias{plotLDarc}
 \title{LocusExplorer - LDarc plot}
 \usage{
-plotLDarc(LD = NULL, xStart = NULL, xEnd = NULL, upper = NULL,
-  lower = NULL, statNames = c("Stepwise", "JAM"), minR2 = 0.4,
-  hitsOnly = FALSE, pad = TRUE, title = NULL)
+plotLDarc(
+  LD = NULL,
+  xStart = NULL,
+  xEnd = NULL,
+  upper = NULL,
+  lower = NULL,
+  statNames = c("Stepwise", "JAM"),
+  minR2 = 0.4,
+  hitsOnly = FALSE,
+  pad = TRUE,
+  title = NULL
+)
 }
 \arguments{
 \item{LD}{plink LD output format, data.frame object with c("BP_A","SNP_A","BP_B","SNP_B","R2") columns.}

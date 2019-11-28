@@ -4,8 +4,13 @@
 \alias{plotBlank}
 \title{Blank plot}
 \usage{
-plotBlank(xStart = NULL, xEnd = NULL, yLabel = "",
-  textAnnot = "No data", pad = TRUE)
+plotBlank(
+  xStart = NULL,
+  xEnd = NULL,
+  yLabel = "",
+  textAnnot = "No data",
+  pad = TRUE
+)
 }
 \arguments{
 \item{xStart, xEnd}{Region range, zoom, minimum BP and maximum BP, advised to keep this less than 5Mb.}

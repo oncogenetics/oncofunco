@@ -17,15 +17,15 @@
 #' getMAF(geno)
 
 
-getMAF <- function(z = NULL, NoCall = 9, flip = TRUE, dosageMax = 2){
+getMAF <- function(z = NULL, noCall = 9, flip = TRUE, dosageMax = 2){
 
   if(!is.matrix(z)){
     stop('class(z) must be "matrix", rows are samples, columns are SNPs, range 0-2.')
   }
 
   # convert missing genotype to NA
-  is.NoCall <- which(z == NoCall)
-  z[is.NoCall] <- NA
+  is.noCall <- which(z == noCall)
+  z[ is.noCall ] <- NA
 
   # check if dosage range is 0 and dosageMax
   if(min(z, na.rm = TRUE) < 0 |

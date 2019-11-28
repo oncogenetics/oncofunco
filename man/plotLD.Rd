@@ -4,9 +4,17 @@
 \alias{plotLD}
 \title{LocusExplorer - LD plot}
 \usage{
-plotLD(data = NULL, xStart = NULL, xEnd = NULL, hits = NULL,
-  hitsName = hits, hitsColour = NULL, hitsLabel = TRUE, pad = TRUE,
-  title = NULL)
+plotLD(
+  data = NULL,
+  xStart = NULL,
+  xEnd = NULL,
+  hits = NULL,
+  hitsName = hits,
+  hitsColour = NULL,
+  hitsLabel = TRUE,
+  pad = TRUE,
+  title = NULL
+)
 }
 \arguments{
 \item{data}{plink LD output format, data.frame object with c("BP_A","SNP_A","BP_B","SNP_B","R2") columns.}

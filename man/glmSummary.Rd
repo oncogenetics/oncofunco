@@ -4,14 +4,24 @@
 \alias{glmSummary}
 \title{A formatted output for glm() object}
 \usage{
-glmSummary(Model = NA, Description = NA, Summary = FALSE)
+glmSummary(
+  model = NA,
+  description = NA,
+  summary = FALSE,
+  decimal = 2,
+  scientificP = TRUE
+)
 }
 \arguments{
-\item{Model}{Output of \code{glm()}, defaults to \code{NA}.}
+\item{model}{Output of \code{glm()}, defaults to \code{NA}.}
 
-\item{Description}{Description column, string, defaults to \code{NA}.}
+\item{description}{Description column, string, defaults to \code{NA}.}
 
 \item{summary}{condensed summary, defaults to \code{FALSE}.}
+
+\item{decimal}{rounding decimals, defaul \code{2}.}
+
+\item{scientificP}{Scientific notation for p-value, default \code{TRUE}.}
 }
 \value{
 a \code{data.frame} object

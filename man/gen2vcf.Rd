@@ -4,9 +4,15 @@
 \alias{gen2vcf}
 \title{Convert IMPUTE2 gen to VCFv4.1 format, input for fastqtl}
 \usage{
-gen2vcf(genFile, sampleFile, chrName, outVCFFile,
-  outVCFHeader = "##fileformat=VCFv4.1", subsetSNPs = NULL,
-  subsetSamples = NULL)
+gen2vcf(
+  genFile,
+  sampleFile,
+  chrName,
+  outVCFFile,
+  outVCFHeader = "##fileformat=VCFv4.1",
+  subsetSNPs = NULL,
+  subsetSamples = NULL
+)
 }
 \arguments{
 \item{genFile}{input gen file}

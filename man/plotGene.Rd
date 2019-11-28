@@ -4,8 +4,14 @@
 \alias{plotGene}
 \title{Plot genes using ggbio::geom_alignment}
 \usage{
-plotGene(chrom = NULL, chromStart = NULL, chromEnd = NULL,
-  hits = NULL, vline = NULL, pad = TRUE)
+plotGene(
+  chrom = NULL,
+  chromStart = NULL,
+  chromEnd = NULL,
+  hits = NULL,
+  vline = NULL,
+  pad = TRUE
+)
 }
 \arguments{
 \item{chrom}{chromosome name, must be character class with length(chrom)==1, e.g.: chr1"}

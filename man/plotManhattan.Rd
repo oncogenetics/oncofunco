@@ -4,12 +4,25 @@
 \alias{plotManhattan}
 \title{LocusExplorer - Manhattan plot}
 \usage{
-plotManhattan(assoc = NULL, LD = NULL, geneticMap = NULL,
-  suggestiveLine = 5, genomewideLine = 8, xStart = NULL,
-  xEnd = NULL, hits = NULL, hitsName = hits, hitsLabel = TRUE,
-  hitsColour = NULL, pad = TRUE, postprob = FALSE, yRangeBy = NULL,
-  title = NULL, opts = c("Recombination", "LD", "LDSmooth",
-  "SuggestiveLine", "GenomewideLine", "Hits"))
+plotManhattan(
+  assoc = NULL,
+  LD = NULL,
+  geneticMap = NULL,
+  suggestiveLine = 5,
+  genomewideLine = 8,
+  xStart = NULL,
+  xEnd = NULL,
+  hits = NULL,
+  hitsName = hits,
+  hitsLabel = TRUE,
+  hitsColour = NULL,
+  pad = TRUE,
+  postprob = FALSE,
+  yRangeBy = NULL,
+  title = NULL,
+  opts = c("Recombination", "LD", "LDSmooth", "SuggestiveLine", "GenomewideLine",
+    "Hits")
+)
 }
 \arguments{
 \item{assoc}{SNP association results, data.frame object with c("SNP","BP","P") columns. Required.}

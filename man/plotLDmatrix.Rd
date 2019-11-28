@@ -4,8 +4,14 @@
 \alias{plotLDmatrix}
 \title{LocusExplorer - LD plot matrix heatmap}
 \usage{
-plotLDmatrix(data = NULL, xStart = NULL, xEnd = NULL, hits = NULL,
-  hitsLabel = TRUE, title = NULL)
+plotLDmatrix(
+  data = NULL,
+  xStart = NULL,
+  xEnd = NULL,
+  hits = NULL,
+  hitsLabel = TRUE,
+  title = NULL
+)
 }
 \arguments{
 \item{data}{plink LD output format, data.frame object with c("BP_A","SNP_A","BP_B","SNP_B","R2") columns.}

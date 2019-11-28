@@ -4,18 +4,25 @@
 \alias{plotHistone}
 \title{LocusExplorer - ENCODE histone track plot}
 \usage{
-plotHistone(folder = NULL,
+plotHistone(
+  folder = NULL,
   file = c("wgEncodeBroadHistoneGm12878H3k27acStdSig.bigWig",
-  "wgEncodeBroadHistoneH1hescH3k27acStdSig.bigWig",
-  "wgEncodeBroadHistoneHsmmH3k27acStdSig.bigWig",
-  "wgEncodeBroadHistoneHuvecH3k27acStdSig.bigWig",
-  "wgEncodeBroadHistoneK562H3k27acStdSig.bigWig",
-  "wgEncodeBroadHistoneNhekH3k27acStdSig.bigWig",
-  "wgEncodeBroadHistoneNhlfH3k27acStdSig.bigWig"), name = c("GM12878",
-  "H1-hESC", "HSMM", "HUVEC", "K562", "NHEK", "NHLF"),
-  colour = c("#FF1F1F", "#FFB41F", "#2ADFAF", "#1FB4FF", "#1F1FFF",
-  "#B41FFF", "#FF1FB4"), alpha = 0.7, chr = NULL, xStart = NULL,
-  xEnd = NULL, pad = TRUE, title = NULL)
+    "wgEncodeBroadHistoneH1hescH3k27acStdSig.bigWig",
+    "wgEncodeBroadHistoneHsmmH3k27acStdSig.bigWig",
+    "wgEncodeBroadHistoneHuvecH3k27acStdSig.bigWig",
+    "wgEncodeBroadHistoneK562H3k27acStdSig.bigWig",
+    "wgEncodeBroadHistoneNhekH3k27acStdSig.bigWig",
+    "wgEncodeBroadHistoneNhlfH3k27acStdSig.bigWig"),
+  name = c("GM12878", "H1-hESC", "HSMM", "HUVEC", "K562", "NHEK", "NHLF"),
+  colour = c("#FF1F1F", "#FFB41F", "#2ADFAF", "#1FB4FF", "#1F1FFF", "#B41FFF",
+    "#FF1FB4"),
+  alpha = 0.7,
+  chr = NULL,
+  xStart = NULL,
+  xEnd = NULL,
+  pad = TRUE,
+  title = NULL
+)
 }
 \arguments{
 \item{folder}{folder path for bigWig files}

@@ -19,6 +19,9 @@ a \code{data.frame} object
 \description{
 This function converts IMPUTE2 gen file posterior probabilities to dosage: collapse every 3 genetype columns for each sample into one columns as: 0*AA + 1*AB + 2*BB
 }
+\author{
+Tokhir Dadaev
+}
 \keyword{convert}
 \keyword{dosage}
 \keyword{dose}

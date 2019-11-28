@@ -4,8 +4,16 @@
 \alias{plotEQTL}
 \title{LocusExplorer - TCGA eQTL plot}
 \usage{
-plotEQTL(data = NULL, xStart = NULL, xEnd = NULL, hits = NULL,
-  hitsTags = TRUE, label = "eQTL TCGA", pad = TRUE, title = NULL)
+plotEQTL(
+  data = NULL,
+  xStart = NULL,
+  xEnd = NULL,
+  hits = NULL,
+  hitsTags = TRUE,
+  label = "eQTL TCGA",
+  pad = TRUE,
+  title = NULL
+)
 }
 \arguments{
 \item{data}{data.frame with columns: c("SNP", "gene", "xSNP", "xGene")}

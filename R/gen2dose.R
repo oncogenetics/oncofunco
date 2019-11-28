@@ -7,6 +7,8 @@
 #' @return a \code{data.frame} object
 #' @keywords impute2 gen dose dosage convert
 #' @export gen2dose
+#' @author Tokhir Dadaev
+
 
 gen2dose <- function(genFile, sampleFile, chrName){
   # input: post probs file, output form IMPUTE2

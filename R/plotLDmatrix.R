@@ -11,6 +11,7 @@
 #' @param title Character string for plot title. Default is NULL, i.e.: no plot title.
 #' @param legend Show plot legend, default TRUE.
 #' @export plotLDmatrix
+#' @import data.table
 #' @author Tokhir Dadaev
 #' @return a \code{ggplot} object
 #' @keywords LD plot SNP genetics

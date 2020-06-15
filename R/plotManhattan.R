@@ -47,10 +47,9 @@ plotManhattan <- function(
   if(!all(c("SNP","BP","P") %in% colnames(assoc))) stop("assoc must have columns: c('SNP','BP','P')")
   # if SNP type is missing set all as typed
   if(!"TYPED" %in% colnames(assoc)){assoc$TYPED <- 2}
-  assoc <- as.data.frame(assoc)
-  assoc <- assoc[ order(assoc$BP), ]
+  assoc <- setDT(assoc, key = "BP")
   #set plog max
-  assoc$PLog <- -log10(assoc$P)
+  assoc[, PLog := -log10(P) ]
   
   # XY range ------------------------------------------------------------------
   if(is.null(xStart)) xStart <- min(assoc$BP, na.rm = TRUE)
@@ -68,18 +67,11 @@ plotManhattan <- function(
     yRange <- c(0, 1)
   }
   
-  
-  #yRangePLog <- c(0, round(max(-log10(assoc$P)) + 5, -1))
-  #yRangePostProb <- c(0, 1)
-  
   #Check input - recomb -------------------------------------------------------
   if("Recombination" %in% opts){
     if(is.null(geneticMap)) stop("geneticMap data is missing for recombination, must have columns: c('BP', 'RECOMB')")
     if(!all(c("BP", "RECOMB") %in% colnames(geneticMap))) stop("geneticMap data must have columns: c('BP', 'RECOMB')")
-    geneticMap <- data.frame(
-      BP = geneticMap$BP,
-      #adjust recomb value to pvalue
-      RECOMB_ADJ = geneticMap$RECOMB * yMax / 100)}
+    geneticMap[, RECOMB_ADJ := RECOMB * yMax / 100 ]}
   
   # Plot all SNPs - background ------------------------------------------------
   gg_out <-
@@ -91,50 +83,45 @@ plotManhattan <- function(
   
   # Plot - Effect -----------------------------------------------------------
   if("Effect" %in% opts & "EFFECT" %in% colnames(assoc)){
-    datEffect <- assoc %>% 
-      transmute(
-        BP = BP,
-        log_OR = EFFECT,
-        y_loess = predict(loess(log_OR ~ BP, span = 0.1)),
-        y_loess_adj = scales::rescale(y_loess, to = c(yRange[2]/4 * 3, yRange[2])), 
-        vline = c(0, diff(sign(y_loess))) != 0)
-    
-    datEffect_shade <- datEffect %>% 
-      filter(vline) %>% 
-      transmute(
-        xStart = BP,
-        xEnd = lead(BP),
-        yStart = 0,
-        yEnd = yRange[2])
-    #datEffect_shade$fill <- head(rep(c("grey60", "grey40"), nrow(datEffect_shade)/2 + 1), nrow(datEffect_shade))
-    datEffect_shade$fill <- head(rep(c("#996777", "#c5a8b1"), nrow(datEffect_shade)/2 + 1), nrow(datEffect_shade))
+    y_loess = predict(loess(EFFECT ~ BP, data = assoc, span = 0.1))
+    y_loess_adj = scales::rescale(y_loess, to = c(yRange[2]/4 * 3, yRange[2]))
+    vline = c(0, diff(sign(y_loess))) != 0
+    datEffect <- data.table(
+      BP = assoc$BP,
+      log_OR = assoc$EFFECT,
+      y_loess, y_loess_adj, vline)
+
+    datEffect_shade <- datEffect[
+      vline,
+      .(xStart = BP,
+        xEnd = data.table::shift(BP, type = "lead"),
+        yStart = 0, yEnd = yRange[ 2 ],
+        fill = rep_len(c("#996777", "#c5a8b1"), 
+                       length.out = sum(vline)))][ !is.na(xEnd), ] 
     
     gg_out <- gg_out +
       geom_line(data = datEffect, aes(BP, y_loess_adj), col = "#6E273D") +
-      geom_rect(data = na.omit(datEffect_shade),
+      geom_rect(data = datEffect_shade,
                 aes(xmin = xStart, xmax = xEnd, ymin = yStart, ymax = yEnd,
                     fill = fill, alpha = 0.5),
                 inherit.aes = FALSE, alpha = 0.2) +
       scale_fill_identity()
   }
-  
-  
-  
+
   # Plot - Recombination ------------------------------------------------------
   if("Recombination" %in% opts & nrow(geneticMap) > 2 ){
     gg_out <- gg_out +
       geom_area(data = geneticMap,
                 aes(BP, RECOMB_ADJ),
                 fill = "#11d0ff", colour = "#00B4E0", alpha = 0.3)}
-  
-  
+
   # Check input - LD ----------------------------------------------------------
   if("LD" %in% opts | "LDSmooth" %in% opts){
     if(is.null(LD)) stop("LD is missing, must have columns: c('BP_A','SNP_A','BP_B','SNP_B','R2')")
     if(!all(c("BP_A","SNP_A","BP_B","SNP_B","R2") %in% colnames(LD)))
       stop("LD must have columns: c('BP_A','SNP_A','BP_B','SNP_B','R2')")
     
-    LD <- as.data.frame(LD)
+    LD <- setDT(LD)
     
     if(is.null(hits)){
       hits <- unique(LD$SNP_A)
@@ -154,31 +141,33 @@ plotManhattan <- function(
     
     #merge LD with assoc, to get R2 shades per point
     plotDat <- merge(
-      LD[ LD$SNP_A %in% hits, c("BP_A","SNP_A","BP_B","SNP_B","R2")],
-      assoc[, c("BP", "TYPED", "PLog")],
-      by.x = "BP_B", by.y = "BP", all = TRUE) %>%
-      arrange(BP_A) %>% 
-      mutate(
-        LDColIndex = ifelse(round(R2, 2) == 0, 1, round(R2, 2) * 100),
-        hitColIndex = as.numeric(factor(SNP_A, levels = hits)),
-        hitCol = colourLD[hitColIndex],
-        LDCol = colourLDPalette[(hitColIndex - 1) * 100 + LDColIndex],
-        R2Adj = yMax * R2 * 0.8)
+      LD[ SNP_A %in% hits, .(BP_A, SNP_A, BP_B, SNP_B, R2)],
+      assoc[, .(BP, TYPED, PLog)],
+      by.x = "BP_B", by.y = "BP", all = TRUE)[order(BP_A), ]
+    plotDat[, LDColIndex := ifelse(round(R2, 2) == 0, 1, round(R2, 2) * 100)]
+    plotDat[, hitColIndex := as.numeric(factor(SNP_A, levels = hits))]
+    plotDat[, hitCol := colourLD[hitColIndex] ]
+    plotDat[, LDCol := colourLDPalette[(hitColIndex - 1) * 100 + LDColIndex] ]
+    plotDat[, R2Adj := yMax * R2 * 0.8]
+      
     # Plot - LD Fill & LD Smooth --------------------------------------------
     #LD fill
     if("LD" %in% opts){
       gg_out <- gg_out +
-        geom_point(data = plotDat, aes(BP_B, PLog, colour = LDCol),
+        geom_point(data = plotDat, aes(BP_B, PLog),
                    size = 4,
                    shape = plotDat$TYPED + 15,
                    col = plotDat$LDCol,
-                   alpha = 0.8, na.rm = TRUE)
-    }
+                   alpha = 0.8, na.rm = TRUE, show.legend = FALSE)
+      }
     #LDSmooth
     if("LDSmooth" %in% opts){
       gg_out <- gg_out +
         geom_smooth(data = plotDat, aes(x = BP_B, y = R2Adj, col = hitCol),
-                    method = "loess", se = FALSE, na.rm = TRUE)
+                    method = ifelse(nrow(plotDat) <=10, "lm", "loess"),
+                    se = FALSE, na.rm = TRUE, 
+                    formula = "y ~ x",
+                    show.legend = FALSE)
     }
     
   } # END if("LD" %in% opts | "LDSmooth" %in% opts)
@@ -209,16 +198,15 @@ plotManhattan <- function(
   if("Hits" %in% opts & !is.null(hits) & any(hits %in% assoc$SNP)){
     gg_out <- gg_out +
       #mark hit SNPs - outline shapes
-      geom_point(data = assoc[ assoc$SNP %in% hits, ],
+      geom_point(data = assoc[ SNP %in% hits, ],
                  aes(x = BP, y = PLog, shape = TYPED),
                  size = 4, colour = "black", na.rm = TRUE) +
       scale_shape_identity() +
       #mark hit SNPs - vertical lines
-      geom_segment(data = assoc[ assoc$SNP %in% hits, ],
+      geom_segment(data = assoc[ SNP %in% hits, ],
                    aes(x = BP, y = 0, xend = BP, yend = PLog),
                    colour = "black",
                    linetype = "dashed")}
-  
   
   # Mark Hits: Labels -------------------------------------------------------
   # SNP names on the plot for hits,
@@ -226,27 +214,14 @@ plotManhattan <- function(
   if("Hits" %in% opts & length(hits) > 0)
     if(!is.null(hitsLabel))
       if(hitsLabel){
-        plotDat <- assoc[ assoc$SNP %in% hits, ]
-        plotDat$rn <- 1:nrow(plotDat)
-        
-        if(all(hits == hitsName)) {
-          plotDat$label <- plotDat$SNP
-        } else {
-          
-          x <- data.frame(SNP = hits, label = hitsName, stringsAsFactors = FALSE)
-          plotDat <- merge(plotDat, x, by = "SNP")
-          plotDat <- plotDat[ order(plotDat$rn), ]
-        }
-        
-        plotDat$label <- as.character(plotDat$label)
-        
+        plotDat <- assoc[ SNP %in% hits, ]
+        plotDat[, label := setNames(hitsName, hits)[ hits ] ]
+
         gg_out <-
           gg_out +
           geom_text_repel(
             aes(BP, PLog, label = label),
             data = plotDat)
-        
-        
       }
   
   # Add title ---------------------------------------------------------------
@@ -259,17 +234,15 @@ plotManhattan <- function(
       ylim = yRange) +
     scale_y_continuous(
       breaks = seq(0, yRange[2], yRangeBy),
-      #expand = expand_scale(add = 0.5),
       #labels = oncofunco::strPadLeft(seq(0, ROIPLogMax, 5)),
       labels = if(pad){strPadLeft(seq(0, yRange[2], yRangeBy))} else {
         seq(0, yRange[2], yRangeBy)},
       name = if(postprob){
         expression(PostProb[])
-      } else {expression(-log[10](italic(p)))}
-      
-    ) +
+        } else {expression(-log[10](italic(p)))}
+      ) +
     scale_colour_identity()
   
   # Output ------------------------------------------------------------------
-  gg_out
+  return(gg_out)
 } #END plotManhattan

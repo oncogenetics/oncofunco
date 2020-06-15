@@ -40,7 +40,7 @@ glmSummary <- function(model = NA, description = NA, summary = FALSE,
   #Stats can be Tscore or Zscore, to keep it standard rename it to TZ.
   colnames(coeffs) <- c("Est","SE","TZ", "P","OR","Lo.CI","Up.CI")
 
-  coeffs[,c(1,2,3)] <- round(coeffs[, c(1, 2, 3)], decimal)
+  coeffs[, 1:3] <- round(coeffs[, 1:3], decimal)
   coeffs$P <- format(coeffs$P, scientific = scientificP)
 
   #output as data.frame
@@ -50,8 +50,7 @@ glmSummary <- function(model = NA, description = NA, summary = FALSE,
       Var = rownames(coeffs),
       Description = description,
       P = coeffs$P,
-      OR = paste0(coeffs$OR, " (", coeffs$Lo.CI, "-", coeffs$Up.CI,")"))
-    colnames(result)[4] <- "OR (CI.95)"
+      `OR (CI.95)` = paste0(coeffs$OR, " (", coeffs$Lo.CI, "-", coeffs$Up.CI,")"))
     row.names(result) <- NULL
   } else
   {

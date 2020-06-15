@@ -12,7 +12,6 @@
 
 
 geneSymbol <- function(chrom = NA, chromStart = NA, chromEnd = NA){
-  # require(dplyr)
   # require(ggplot2)
   # require(ggbio)
   # require(GenomicFeatures)
@@ -27,7 +26,7 @@ geneSymbol <- function(chrom = NA, chromStart = NA, chromEnd = NA){
 
   # Input checks ----------------------------------------------------------
   if(!is.character(chrom) |
-     length(chrom)!=1 |
+     length(chrom) != 1 |
      !chrom %in% chr) stop("chrom: must be character class with length(chrom)==1, e.g.: chr1")
 
   if(is.na(chromStart) |
@@ -40,9 +39,8 @@ geneSymbol <- function(chrom = NA, chromStart = NA, chromEnd = NA){
     dbGetQuery(txdb$conn,
                paste0("select * from chrominfo where chrom='",
                       chrom,"'"))
-  chromStart <- ifelse(is.na(chromStart) |
-                         chromStart < 0,
-                       0,chromStart)
+  chromStart <- ifelse(is.na(chromStart) | chromStart < 0,
+                       0, chromStart)
   chromEnd <- ifelse(is.na(chromEnd) |
                        chromEnd > chrominfo$length |
                        chromEnd < chromStart,
@@ -50,42 +48,38 @@ geneSymbol <- function(chrom = NA, chromStart = NA, chromEnd = NA){
 
   #Print summary for selection region of interest
   print(paste0("Collapsing to gene symbols, region: ",
-               chrom,":",chromStart,"-",chromEnd))
+               chrom, ":", chromStart, "-", chromEnd))
 
   # Get chromosome start end positions to subset TXDB for transcripts
-  roi_chr <- GRanges(seqnames=chrominfo$chrom,
-                     IRanges(start=chromStart,
-                             end=chromEnd,
-                             names=chrom))
+  roi_chr <- GRanges(seqnames = chrominfo$chrom,
+                     IRanges(start = chromStart,
+                             end = chromEnd,
+                             names = chrom))
   # Collapse to gene symbol -----------------------------------------------
   # Subset txdb over overlaps for chr-start-end
-  keys_overlap_tx_id <-
-    subsetByOverlaps(transcripts(txdb),roi_chr) %>%
-    as.data.frame() %>%
-    .$tx_id %>% as.character
+  keys_overlap_tx_id <- as.data.frame(subsetByOverlaps(transcripts(txdb), roi_chr))
+  keys_overlap_tx_id <- as.character(keys_overlap_tx_id$tx_id)
 
   # Match TX ID to GENEID
   TXID_GENEID <- AnnotationDbi::select(txdb,
-                                       keys=keys_overlap_tx_id,
-                                       columns=c("TXNAME","GENEID"),
-                                       keytype="TXID")
-
+                                       keys = keys_overlap_tx_id,
+                                       columns = c("TXNAME","GENEID"),
+                                       keytype = "TXID")
   # Select transcipts from txdb which have GENEID
   Trans <- AnnotationDbi::select(txdb,
-                                 keys=as.character(TXID_GENEID$TXID),
-                                 columns=columns(txdb),
+                                 keys = as.character(TXID_GENEID$TXID),
+                                 columns = columns(txdb),
                                  keytype = "TXID")
-
   # Get gene symbol
   gene_symbol <- unique(
     AnnotationDbi::select(org.Hs.eg.db,
-                          keys=Trans[ !is.na(Trans$GENEID),"GENEID"],
-                          columns="SYMBOL",
-                          keytype="ENTREZID"))
+                          keys = Trans[ !is.na(Trans$GENEID), "GENEID"],
+                          columns = "SYMBOL",
+                          keytype = "ENTREZID"))
 
   # Match GENEID, SYMBOL
-  TXID_GENEID <- left_join(TXID_GENEID,gene_symbol,
-                           by=c("GENEID" = "ENTREZID"))
+  TXID_GENEID <- merge(TXID_GENEID, gene_symbol, 
+                       by.x = "GENEID", by.y = "ENTREZID")
 
   # If not match on gene symbol, then TXNAME is gene symbol
   # TXID_GENEID$SYMBOL <- ifelse(is.na(TXID_GENEID$SYMBOL),
@@ -94,8 +88,7 @@ geneSymbol <- function(chrom = NA, chromStart = NA, chromEnd = NA){
   TXID_GENEID <- TXID_GENEID[ !is.na(TXID_GENEID$SYMBOL), ]
   
   # merge to add gene symbol
-  Trans <- left_join(Trans,TXID_GENEID,
-                     by=c("TXID","GENEID","TXNAME"))
+  Trans <- merge(Trans, TXID_GENEID, by = c("TXID","GENEID","TXNAME"))
 
   # If not match on gene symbol, then TXNAME is gene symbol
   # Trans$SYMBOL <- ifelse(is.na(Trans$SYMBOL),
@@ -103,13 +96,12 @@ geneSymbol <- function(chrom = NA, chromStart = NA, chromEnd = NA){
   Trans <- Trans[ !is.na(Trans$SYMBOL), ]
 
   #Make Granges object
-  CollapsedGenes <-
-    GRanges(seqnames=Trans$EXONCHROM,
-            IRanges(start=Trans$EXONSTART,
-                    end=Trans$EXONEND),
-            strand=Trans$EXONSTRAND)
+  CollapsedGenes <- GRanges(seqnames = Trans$EXONCHROM,
+                            IRanges(start = Trans$EXONSTART,
+                                    end = Trans$EXONEND),
+                            strand = Trans$EXONSTRAND)
   CollapsedGenes$gene_id <- Trans$SYMBOL
-
+  
   # Output ----------------------------------------------------------------
   #return collapsed genes per CHR
   return(CollapsedGenes)

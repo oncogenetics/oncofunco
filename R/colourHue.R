@@ -1,14 +1,14 @@
 #' ggplot2 colours
 #'
-#' Generate colours matching ggplot
-#' @param n number of colours to output
-#' @return n number of colour names
+#' Generate colours matching ggplot. Adapted from JohnColby's solution at StackOverflow.
+#' @param n number of colours to output.
+#' @return n number of colour names.
 #' @export colourHue
 #' @author Tokhir Dadaev
-#' @seealso \url{http://stackoverflow.com/questions/8197559}
+#' @seealso \url{https://stackoverflow.com/a/8197703/680068}
 
 colourHue <- function(n){
-  # adapted from http://stackoverflow.com/questions/8197559
+  # adapted from https://stackoverflow.com/a/8197703/680068
   # ref: SNP LD colours ggplot default colours
   
   hues = seq(15, 375, length = n + 1)

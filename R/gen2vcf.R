@@ -32,18 +32,17 @@ gen2vcf <- function(genFile, sampleFile, chrName,
   # chr7	456	SNP2	T	C	100	PASS	INFO	GT:DS	0/0:0.001	0/0:0.000	0/1:1.100	0/0:0.100
   # chr7	789	SNP3	A	T	100	PASS	INFO	GT:DS	1/1:2.000	0/1:1.001	0/0:0.010	0/1:0.890
   
-  
   dose <- gen2dose(genFile = genFile, sampleFile = sampleFile,
                    chrName = chrName)
-   dose <- gen2dose(genFile = "example.gen", sampleFile = "example.sample",
-                    chrName = "22")
+  #dose <- gen2dose(genFile = "example.gen", sampleFile = "example.sample",
+  #                 chrName = "22")
   
-  d1 <- dose[, c("V3", "V2", "V4", "V5")]
+  d1 <- dose[, c(3, 2, 4, 5)]
   colnames(d1) <- c("POS", "ID", "REF", "ALT")
   d2 <- data.table::data.table(QUAL = 100,
-                   FILTER = "PASS",
-                   INFO = "INFO",
-                   FORMAT = "DS")
+                               FILTER = "PASS",
+                               INFO = "INFO",
+                               FORMAT = "DS")
   
   outVCF <- cbind(
     #VCF 9 fixed, mandatory columns.

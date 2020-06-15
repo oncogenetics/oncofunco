@@ -55,11 +55,12 @@ plotAnnot <- function(data,
           strPadLeft( c("DNaseI","Conserved",
                         #ChromHMM
                         "Heterochromatin","CTCF","CTCF+Enhancer","Promoter","Enhancer",
-                        "Poised_Promoter","Transcribed","Repressed","CTCF+Promoter")) } else {
-                          c("DNaseI","Conserved",
-                            #ChromHMM
-                            "Heterochromatin","CTCF","CTCF+Enhancer","Promoter","Enhancer",
-                            "Poised_Promoter","Transcribed","Repressed","CTCF+Promoter") } ,
+                        "Poised_Promoter","Transcribed","Repressed","CTCF+Promoter")) 
+          } else {
+            c("DNaseI","Conserved",
+              #ChromHMM
+              "Heterochromatin","CTCF","CTCF+Enhancer","Promoter","Enhancer",
+              "Poised_Promoter","Transcribed","Repressed","CTCF+Promoter") } ,
         name = expression(Annotation[]))
   }
   

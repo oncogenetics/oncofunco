@@ -28,8 +28,6 @@ plotEQTL <- function(
     stop("data must have columns: c('SNP', 'gene', 'xSNP', 'xGene')") 
   } else data <- as.data.frame(data)
   
-
-
   #data = as.data.frame(datEQTL)
   data$type = factor(ifelse(data$SNP %in% hits, "hit",
                            ifelse(data$SNP %in% hitsTags, "hitTag", "other")),

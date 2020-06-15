@@ -13,7 +13,6 @@
 #' @author Tokhir Dadaev
 #' @return a list with 2 objects: $genePlot \code{ggplot} object and $geneCount numeric
 
-
 plotGene <- function(chrom = NULL,
                      chromStart = NULL,
                      chromEnd = NULL,
@@ -22,7 +21,6 @@ plotGene <- function(chrom = NULL,
                      pad = TRUE){
   
   plotDatGeneN <- 1
-  
   #get granges collapsed genes for ggplot+ggbio
   plotDatGene <- geneSymbol(chrom, chromStart, chromEnd)
   
@@ -32,10 +30,8 @@ plotGene <- function(chrom = NULL,
       annotate("text",
                x = chromStart + (chromEnd - chromStart)/2,
                y = 0.35,
-               label = "No gene"
-      )
-  } else {
-    
+               label = "No gene")
+    } else {
     #number of genes in zoomed region, if no genes then 1
     plotDatGeneN <- try({
       length(unique(plotDatGene@elementMetadata$gene_id))}, silent = TRUE)
@@ -57,11 +53,10 @@ plotGene <- function(chrom = NULL,
              "#F00034",
              lookUpCol[ as.character(plotDatGene@strand) ])
     
-    
     # pad gene names to align
     if(pad) {
       plotDatGene@elementMetadata$gene_id <-
-        oncofunco::strPadLeft(plotDatGene@elementMetadata$gene_id)}
+        strPadLeft(plotDatGene@elementMetadata$gene_id)}
     
     # return ggbio:gene plot
     gg_out <- ggplot() +
@@ -79,17 +74,13 @@ plotGene <- function(chrom = NULL,
         geom_vline(xintercept = vline,
                    col = "black", #col = "#4daf4a",
                    linetype = "dashed")}
-    
-    
-  }
+    }
   
   gg_out <- gg_out + coord_cartesian(xlim = c(chromStart, chromEnd))
   
   #return output ggplot
   return(list(genePlot = gg_out,
               geneCnt = plotDatGeneN))
-  
-  
 } # END plotGene
 
 

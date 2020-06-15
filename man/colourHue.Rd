@@ -7,16 +7,16 @@
 colourHue(n)
 }
 \arguments{
-\item{n}{number of colours to output}
+\item{n}{number of colours to output.}
 }
 \value{
-n number of colour names
+n number of colour names.
 }
 \description{
-Generate colours matching ggplot
+Generate colours matching ggplot. Adapted from JohnColby's solution at StackOverflow.
 }
 \seealso{
-\url{http://stackoverflow.com/questions/8197559}
+\url{https://stackoverflow.com/a/8197703/680068}
 }
 \author{
 Tokhir Dadaev

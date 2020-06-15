@@ -9,8 +9,12 @@ plotLDmatrix(
   xStart = NULL,
   xEnd = NULL,
   hits = NULL,
+  hitsName = hits,
   hitsLabel = TRUE,
-  title = NULL
+  hitsNameLength = 20,
+  cols = c("lightblue", "#fef0d9", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000"),
+  title = NULL,
+  legend = TRUE
 )
 }
 \arguments{
@@ -20,7 +24,17 @@ plotLDmatrix(
 
 \item{hits}{SNP names to label in the plot. Must be present in assoc data.frame.}
 
-\item{title}{character string for plot title. Default is NULL, i.e.: no plot title.}
+\item{hitsName}{Alternative SNP names to label in the plot. Default same as `hits`}
+
+\item{hitsLabel}{Default is TRUE, set to FALSE not to show SNP names on the plot.}
+
+\item{hitsNameLength}{Maximum characters for the label.}
+
+\item{cols}{colours, length 6.}
+
+\item{title}{Character string for plot title. Default is NULL, i.e.: no plot title.}
+
+\item{legend}{Show plot legend, default TRUE.}
 }
 \value{
 a \code{ggplot} object
